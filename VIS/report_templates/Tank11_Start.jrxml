@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Tank11_Start" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c331d14f-1793-44dc-bf1d-33f09dc0bb71">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TSP"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<parameter name="actDate" class="java.lang.String"/>
+	<parameter name="actTime" class="java.lang.String"/>
+	<parameter name="tankId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select * from "TSP_Report" where  "TSP_Report".daq_date = $P{actDate} 
+and  "TSP_Report".daq_time =  $P{actTime} and  "TSP_Report"."tankID" = $P{tankId} ]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<field name="tankID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="tankID"/>
+	</field>
+	<field name="daq_date" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="daq_date"/>
+	</field>
+	<field name="daq_time" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="daq_time"/>
+	</field>
+	<field name="t_temper" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_temper"/>
+	</field>
+	<field name="t_level" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_level"/>
+	</field>
+	<field name="t_density" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_density"/>
+	</field>
+	<field name="t_volume" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_volume"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="5" splitType="Stretch">
+			<textField>
+				<reportElement x="-20" y="-20" width="167" height="20" uuid="792c4c23-d649-4786-9985-0f6585e08e5b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{t_temper}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="149" y="-20" width="167" height="20" uuid="a439e6f1-8762-4446-9c25-cb8a8c3c4812"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{t_density}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="-20" width="167" height="20" uuid="5c005f91-a833-4b67-9fbe-eee901e5be05"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{t_volume}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="487" y="-20" width="172" height="20" uuid="58a4f277-ecbe-49c4-a0d2-96e4aacd1609"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{t_level}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

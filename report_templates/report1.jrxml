@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TSP" language="groovy" printOrder="Horizontal" pageWidth="842" pageHeight="592" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8d839649-5679-44c3-9749-e11fcde5eefb">
+	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="111"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TSP"/>
+	<property name="com.jaspersoft.studio.unit." value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="mm"/>
+	<style name="Title" isDefault="true" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="actDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="actTime" class="java.lang.String"/>
+	<parameter name="endTime" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT * FROM TSP_Report t where  t.daq_date = $P{actDate}]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<field name="tankID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="tankID"/>
+	</field>
+	<field name="daq_date" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="daq_date"/>
+	</field>
+	<field name="daq_time" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="daq_time"/>
+	</field>
+	<field name="t_temper" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_temper"/>
+	</field>
+	<field name="t_level" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_level"/>
+	</field>
+	<field name="t_density" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_density"/>
+	</field>
+	<field name="t_volume" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_volume"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="550" splitType="Stretch">
+			<image>
+				<reportElement x="576" y="0" width="225" height="40" uuid="f1d3d695-109a-4775-850f-da8f8c87f6ff"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR}+"alexprom_new.png"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="0" y="65" width="801" height="1" uuid="7a1b91a8-837f-40af-b8f4-80eabb8e0643"/>
+			</line>
+			<staticText>
+				<reportElement x="240" y="45" width="300" height="19" uuid="18ffcef3-39dd-464e-a766-abbd6f8b920d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Отчет по складу на начало суток]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="291" width="300" height="19" uuid="1400133c-e90f-42d3-ac90-dd02cf4bfb00"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Отчет по складу на конец суток]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="85" width="801" height="1" uuid="4004c497-3792-4c60-82a2-69bbe53405e9"/>
+			</line>
+			<textField>
+				<reportElement x="77" y="10" width="140" height="20" uuid="36c074f9-93ab-4ef6-843e-4603511162d2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daq_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="65" width="120" height="20" uuid="33c9b958-5f69-48f4-af1d-33bc05a8006a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[№ резервуара]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="102" width="801" height="1" uuid="20e5b0bc-b9c9-4a00-832e-78b0984c2489"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="104" width="120" height="15" uuid="12b2617a-1983-40a8-a4d1-bff57faa542c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[11]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="121" width="801" height="1" uuid="815aaa7e-0d85-4179-8e7d-5196c4be24be"/>
+			</line>
+			<line>
+				<reportElement x="0" y="140" width="801" height="1" uuid="b3a6869d-80fb-4e2a-80ed-b9de48eb1c88"/>
+			</line>
+			<line>
+				<reportElement x="0" y="159" width="801" height="1" uuid="f61f6845-5f40-49c9-97fb-e1c7d925a41b"/>
+			</line>
+			<line>
+				<reportElement x="0" y="178" width="801" height="1" uuid="152c75c9-63a9-493d-876a-ad4dccc3ec1b"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="123" width="120" height="15" uuid="2fcb04a7-dd17-4b16-8ba5-87b7a2ad204a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[15]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="142" width="120" height="15" uuid="d2ef6eb2-46ee-4ee3-ac68-869d29f870d8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[16]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="161" width="120" height="15" uuid="18d48ddb-38c6-4499-80f7-fdf2de030040"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[24]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="86" width="120" height="15" uuid="027516a8-a000-4494-ab1c-7a0936b7f2b0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[1.0]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="65" width="1" height="150" uuid="3023e610-7ac3-4b74-8735-4d9145c1975d"/>
+			</line>
+			<line>
+				<reportElement x="122" y="65" width="1" height="150" uuid="66316893-eca1-4d7f-87e2-c205149b7ef9"/>
+			</line>
+			<staticText>
+				<reportElement x="124" y="65" width="167" height="20" uuid="6708cd2f-aa30-477c-92b1-500ce4b6f8d4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Температура, °С]]></text>
+			</staticText>
+			<line>
+				<reportElement x="291" y="65" width="1" height="150" uuid="18f4391f-1d67-4e12-adab-3b44707fbbd4"/>
+			</line>
+			<staticText>
+				<reportElement x="292" y="65" width="167" height="20" uuid="38af2faa-749c-4bc5-9175-5c0c588e4448"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Плотность, кг/л]]></text>
+			</staticText>
+			<line>
+				<reportElement x="459" y="65" width="1" height="150" uuid="6b10d3ab-3101-4cd2-8418-e70ce2a5508e"/>
+			</line>
+			<staticText>
+				<reportElement x="460" y="65" width="167" height="20" uuid="617b0a4c-3edf-43cd-8e95-e5b8d9d634ea"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Объем, л]]></text>
+			</staticText>
+			<line>
+				<reportElement x="627" y="66" width="1" height="150" uuid="f0411f8e-e41c-4f28-8552-23d85a1de586"/>
+			</line>
+			<line>
+				<reportElement x="801" y="66" width="1" height="150" uuid="2dfc7632-ccd7-40ea-8abe-80e886ac4786"/>
+			</line>
+			<staticText>
+				<reportElement x="628" y="65" width="172" height="20" uuid="693204cf-9f3f-42e7-8ad7-103a0fb44f57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Взлив, мм]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="222" width="801" height="1" uuid="2c41b31d-69ea-48b4-a157-d59a3904deb2"/>
+			</line>
+			<line>
+				<reportElement x="0" y="245" width="801" height="1" uuid="5421346c-b1b5-4422-ab89-233fb1871f1d"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="224" width="120" height="20" uuid="73e1328a-0c01-4f58-ac1d-87520d01591a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Счетчик]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="262" width="801" height="1" uuid="e638dba3-823e-4d68-a940-1caabca37e76"/>
+			</line>
+			<staticText>
+				<reportElement x="124" y="224" width="167" height="20" uuid="993e2d12-f2a4-4405-a162-156ae41fb2c1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Температура, °С]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="292" y="224" width="167" height="20" uuid="fdd7d343-9bb4-434e-b796-270b376ac28b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Плотность, кг/л]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="224" width="167" height="20" uuid="5aad23af-877d-4b97-81ec-432e80d4fac3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Объем, л]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="628" y="224" width="172" height="20" uuid="d4dae939-1295-4d37-ba24-b44a06aaf7c0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Масса, кг]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="222" width="1" height="58" uuid="b5ea46db-cecb-4531-a576-f58bf8f3d3f7"/>
+			</line>
+			<line>
+				<reportElement x="122" y="223" width="1" height="58" uuid="e925f8b3-7654-4502-9380-a59394e27534"/>
+			</line>
+			<line>
+				<reportElement x="291" y="223" width="1" height="58" uuid="ecda0a41-b8bb-401f-b326-d99421174784"/>
+			</line>
+			<line>
+				<reportElement x="459" y="223" width="1" height="58" uuid="1b7a490f-92e8-4bb7-b23f-63dbb195a89d"/>
+			</line>
+			<line>
+				<reportElement x="627" y="223" width="1" height="58" uuid="d3db4bd5-c110-4a72-abcf-f5fb06a9c27a"/>
+			</line>
+			<line>
+				<reportElement x="801" y="223" width="1" height="58" uuid="bea8bd38-a48b-4a35-8863-714b561439af"/>
+			</line>
+			<line>
+				<reportElement x="0" y="312" width="801" height="1" uuid="a5ff21a7-6e43-4df9-af66-970fb15afa89"/>
+			</line>
+			<line>
+				<reportElement x="0" y="332" width="801" height="1" uuid="19117108-9335-4f47-8265-3955f61f4edd"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="312" width="120" height="20" uuid="a7886cb0-bf6c-48cb-946b-1ce822e0372e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[№ резервуара]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="348" width="801" height="1" uuid="97d90595-5bee-4c1e-bc8d-0b65e44f0cb8"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="349" width="120" height="15" uuid="f1540e3c-6a05-4555-afa1-5f3fef0fb245"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[11]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="365" width="801" height="1" uuid="321af976-d28d-4166-8ea9-2d6c11f91e1e"/>
+			</line>
+			<line>
+				<reportElement x="0" y="383" width="801" height="1" uuid="d77680d2-1de4-41a8-879a-3e5b04f0cd2a"/>
+			</line>
+			<line>
+				<reportElement x="0" y="401" width="801" height="1" uuid="a8bc01e3-cbfd-48c4-b6e8-378453952e46"/>
+			</line>
+			<line>
+				<reportElement x="0" y="419" width="801" height="1" uuid="424e8486-63d1-4ba9-b102-4b7181338d35"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="367" width="120" height="15" uuid="bf009bda-08b5-49de-91e9-d72f1ef4a51d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[15]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="384" width="120" height="15" uuid="5d2e4389-3d24-48bb-9eef-1705bad1db8e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[16]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="403" width="120" height="15" uuid="6bcef690-bf4f-4ab9-a4bc-b89623db895f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[24]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="333" width="120" height="15" uuid="87ab7229-7b32-40f8-9e05-a7af6568164b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[1.0]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="312" width="1" height="143" uuid="29386089-fb3d-47a3-bfa5-61ca689c85ab"/>
+			</line>
+			<line>
+				<reportElement x="122" y="312" width="1" height="143" uuid="f651101a-f917-4302-af28-8f6035691b78"/>
+			</line>
+			<staticText>
+				<reportElement x="124" y="312" width="167" height="20" uuid="622df87e-15e5-447e-a5c0-63c14360ada3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Температура, °С]]></text>
+			</staticText>
+			<line>
+				<reportElement x="291" y="312" width="1" height="143" uuid="dc2f33a1-3dd3-4d15-820b-67d0a4add884"/>
+			</line>
+			<staticText>
+				<reportElement x="292" y="312" width="167" height="20" uuid="cf29f205-3124-4ae2-8358-697ef16ec862"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Плотность, кг/л]]></text>
+			</staticText>
+			<line>
+				<reportElement x="459" y="312" width="1" height="143" uuid="06922526-d524-4571-b2c6-9b9430a68d17"/>
+			</line>
+			<staticText>
+				<reportElement x="460" y="312" width="167" height="20" uuid="497ed84d-4e55-40a7-bc25-e8771b33f0e6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Объем, л]]></text>
+			</staticText>
+			<line>
+				<reportElement x="627" y="313" width="1" height="143" uuid="07c0bd5b-c4f1-47b8-88b1-3b7e51fb3739"/>
+			</line>
+			<line>
+				<reportElement x="801" y="313" width="1" height="143" uuid="38186f57-81d1-4704-978f-373b392580b9"/>
+			</line>
+			<staticText>
+				<reportElement x="628" y="312" width="172" height="20" uuid="5ca93d40-828e-4c13-8a56-0da915657be3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Взлив, мм]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="462" width="801" height="1" uuid="49bdeca8-cad4-4e9b-b7e3-221281854a8f"/>
+			</line>
+			<line>
+				<reportElement x="0" y="482" width="801" height="1" uuid="e3b5fd2c-7b3e-4857-bbcf-459d231881e5"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="462" width="120" height="20" uuid="2651ec84-1252-4d4b-b02d-3e42cc6a1f3b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Счетчик]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="499" width="801" height="1" uuid="b29ae7e1-ef8e-4bf0-9d4d-39c7d83c3698"/>
+			</line>
+			<staticText>
+				<reportElement x="124" y="462" width="167" height="20" uuid="6dcd3c10-8b06-40ac-8814-87c1f2b91501"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Температура, °С]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="292" y="462" width="167" height="20" uuid="47d616ff-e7e7-4d26-927d-042678481b51"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Плотность, кг/л]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="462" width="167" height="20" uuid="3a280eb4-3594-4461-8eda-aaa9a9f4a37f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Объем, л]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="628" y="462" width="172" height="20" uuid="030cee6f-f0ff-4b4a-bea3-8d16b957928f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Масса, кг]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="462" width="1" height="55" uuid="eac37cda-bbd9-4146-99c6-0b8c693ba441"/>
+			</line>
+			<line>
+				<reportElement x="122" y="463" width="1" height="55" uuid="7d4371a7-c0f4-4b05-bf1e-9d0d9530fcf4"/>
+			</line>
+			<line>
+				<reportElement x="291" y="463" width="1" height="55" uuid="b250f4ae-478b-4901-9355-8e2ed4ef5f19"/>
+			</line>
+			<line>
+				<reportElement x="459" y="463" width="1" height="55" uuid="90af9a30-0f07-4e19-abd5-5d92505d22e1"/>
+			</line>
+			<line>
+				<reportElement x="627" y="463" width="1" height="55" uuid="f27e6324-8da0-48fe-9d48-59f06db7ca25"/>
+			</line>
+			<line>
+				<reportElement x="801" y="463" width="1" height="55" uuid="b0333a8c-f03a-4f13-932c-ec77202fd469"/>
+			</line>
+			<staticText>
+				<reportElement x="10" y="10" width="65" height="20" uuid="b78ff04c-2435-4309-83a2-8f327c459f17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Дата:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="117" y="530" width="163" height="20" uuid="c668b9fb-6d2f-44d2-a19d-99fef14537b0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Начальник ТСП]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="292" y="530" width="163" height="20" uuid="19544fbd-2b44-4c46-8f3f-f42302ff2448"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[/___________________/]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="487" y="530" width="163" height="20" uuid="6978cdc9-58cf-4462-95e9-a3c114438de8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[/__Левченко Ю.А.__/]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="127" y="104" width="671" height="15" uuid="63b9b077-c92d-4be6-a926-16df1a616631"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{actTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[20]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="123" width="671" height="15" uuid="29dd639f-729d-4150-bb29-6fe09ae970f6"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{actTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[24]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="142" width="671" height="15" uuid="6726493b-03da-4900-b572-2431bda4041e"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{actTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[25]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="161" width="671" height="15" uuid="dc92b68a-439d-4462-b2e2-fdbd2b87494a"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{actTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[33]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="86" width="671" height="15" uuid="853a7dff-3dcb-47df-94a8-c7d6d04b7f7b"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{actTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[1]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="350" width="671" height="15" uuid="ca72ce7c-5e8c-46b5-bb38-efe054113985"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{endTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[20]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="367" width="671" height="15" uuid="1d9667c8-ffb0-475c-8bf2-816fa3a5ac81"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{endTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[24]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="386" width="671" height="15" uuid="070f35a6-2577-4a92-b955-24ecbafc4c27"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{endTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[25]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="403" width="671" height="15" uuid="cd92d255-4002-4523-9dba-35195050f460"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{endTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[33]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="333" width="671" height="15" uuid="3672c11a-ac2d-421f-aa7c-87ec676b5224"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{endTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[1]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="246" width="671" height="15" uuid="2a66d943-1181-4b2f-b35f-00f4a0a0bfa8"/>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{actTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[101]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="127" y="483" width="671" height="15" uuid="a28b6eac-98c3-473e-9397-bb21070a6cfc"/>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{endTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[101]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement x="1" y="197" width="801" height="1" uuid="b8f3e9ab-018e-4d55-b401-790550e853e4"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="180" width="120" height="15" uuid="14c13973-3284-431c-8496-22eb16076676"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[32]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="127" y="180" width="671" height="15" uuid="5d461f8d-e3f7-4abc-997e-c0273ff3390d"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{actTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[47]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement x="1" y="280" width="801" height="1" uuid="57cf1605-d234-4a5a-8a41-f280fd6532fb"/>
+			</line>
+			<subreport>
+				<reportElement x="127" y="263" width="671" height="15" uuid="f1d90628-aded-42c8-a8b7-457bf9b853a8"/>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{actTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[102]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement x="1" y="455" width="801" height="1" uuid="895c87c3-238e-473e-82c5-aac7eb209e79"/>
+			</line>
+			<line>
+				<reportElement x="1" y="517" width="801" height="1" uuid="e3b367ac-5080-4d56-a9dc-132be037a42b"/>
+			</line>
+			<subreport>
+				<reportElement x="127" y="501" width="671" height="15" uuid="b9416682-ea99-4de5-8bff-6d1aaf4e6eed"/>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{endTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[102]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="2" y="421" width="120" height="15" uuid="a8a51d9b-e459-4886-9d54-ed5e4f7cc960"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[32]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="127" y="421" width="671" height="15" uuid="8a152540-695e-46fa-9336-1a14b8ae1c33"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{endTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[47]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="2" y="247" width="120" height="15" uuid="4087cf08-93e2-43c1-9833-149dd256d060"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="264" width="120" height="15" uuid="745944ec-5c81-495b-95c2-2a2b8a805245"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="483" width="120" height="15" uuid="367e8b1c-1f82-40d3-b694-92b1d8df8a0c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="500" width="120" height="15" uuid="02488bfc-5ecc-4742-a1b5-b730a1251897"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="199" width="120" height="15" uuid="9b0ee2ca-3dca-4de6-b89b-b71a81d662ae"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[23]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="127" y="199" width="671" height="15" uuid="1c37ed97-7af9-4fc4-8e6d-c742baf24310"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{actTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[32]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement x="1" y="215" width="801" height="1" uuid="2e285d2f-0904-4a85-ae7d-73c6ddca4458"/>
+			</line>
+			<line>
+				<reportElement x="1" y="437" width="801" height="1" uuid="e7e817ea-3852-4f9d-8df8-c33831ddbed7"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="439" width="120" height="15" uuid="e5c12d50-114d-44a7-a24b-8d65a0db895e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[23]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="127" y="439" width="671" height="15" uuid="8017e07d-3bc2-4592-b65c-421ae1a71129"/>
+				<subreportParameter name="actDate">
+					<subreportParameterExpression><![CDATA[$P{actDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actTime">
+					<subreportParameterExpression><![CDATA[$P{endTime}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tankId">
+					<subreportParameterExpression><![CDATA[32]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"Tank11_Start.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

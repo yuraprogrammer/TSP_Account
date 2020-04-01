@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: com.alexprom.tsp_account.daq
+OpenIDE-Module-Implementation-Version: 2
+OpenIDE-Module-Install: com/alexprom/tsp_account/daq/Installer.class
+OpenIDE-Module-Localizing-Bundle: com/alexprom/tsp_account/daq/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+

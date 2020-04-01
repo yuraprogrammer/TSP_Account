@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <Servers>
+        <Server name="ConfigServer" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver" URL="jdbc:sqlserver://R1:1433" Source="OilConfig" User="roman" Password="roman" />
+        <Server name="DataServer" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver" URL="jdbc:sqlserver://R1:1433" Source="Alexprom_ASUTP" User="roman" Password="roman" />  
+    </Servers>
+    <AgentPath name="localhost" />
+    <Controllers>
+        <PLC name="PLC_KR3" host="192.168.1.14"/>
+    </Controllers>
+    <Addresses>	
+        <LevelTag name="Level_11.Value" plcName="PLC_KR3" S7Addr="DB3.DBD0" minValue="0" maxValue="100000" />
+        <LevelTag name="Level_15.Value" plcName="PLC_KR3" S7Addr="DB3.DBD4" minValue="0" maxValue="100000" />
+        <LevelTag name="Level_16.Value" plcName="PLC_KR3" S7Addr="DB3.DBD8" minValue="0" maxValue="100000" />
+		<LevelTag name="Level_17.Value" plcName="PLC_KR3" S7Addr="DB3.DBD12" minValue="0" maxValue="100000" />
+		<LevelTag name="Level_26.Value" plcName="PLC_KR3" S7Addr="DB3.DBD16" minValue="0" maxValue="100000" />
+		<TemperatureTag name="Temperature_11.Value" plcName="PLC_KR3" S7Addr="DB3.DBD20" minValue="0" maxValue="100000" />
+		<TemperatureTag name="Temperature_15.Value" plcName="PLC_KR3" S7Addr="DB3.DBD24" minValue="0" maxValue="100000" />
+		<TemperatureTag name="Temperature_16.Value" plcName="PLC_KR3" S7Addr="DB3.DBD28" minValue="0" maxValue="100000" />
+        <TemperatureTag name="Temperature_17.Value" plcName="PLC_KR3" S7Addr="DB3.DBD36" minValue="0" maxValue="100000" />
+        <TemperatureTag name="Temperature_26.Value" plcName="PLC_KR3" S7Addr="DB3.DBD40" minValue="0" maxValue="100000" />
+        <DensityTag name="Density_11.Value" plcName="PLC_KR3" S7Addr="DB3.DBD44" minValue="0" maxValue="100000" />
+		<DensityTag name="Density_15.Value" plcName="PLC_KR3" S7Addr="DB3.DBD48" minValue="0" maxValue="100000" />
+		<DensityTag name="Density_16.Value" plcName="PLC_KR3" S7Addr="DB3.DBD52" minValue="0" maxValue="100000" />
+		<DensityTag name="Density_17.Value" plcName="PLC_KR3" S7Addr="DB3.DBD56" minValue="0" maxValue="100000" />
+		<DensityTag name="Density_26.Value" plcName="PLC_KR3" S7Addr="DB3.DBD60" minValue="0" maxValue="100000" />		
+    </Addresses>
+</configuration>

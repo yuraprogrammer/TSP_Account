@@ -7,6 +7,8 @@ package com.alexprom.tsp_account.vis;
 
 import com.alexprom.connection.settings.dbConnectionSettingsPanel;
 import com.alexprom.tsp_account.daq.CounterData;
+import com.alexprom.tsp_account.daq.DAQ_Thread;
+import com.alexprom.tsp_account.daq.DataLoggerTopComponent;
 import com.alexprom.tsp_account.daq.JPlcAgent;
 import com.alexprom.tsp_account.daq.TagManagementPanel;
 import com.alexprom.tsp_account.daq.TankData;
@@ -39,6 +41,7 @@ import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
+import org.openide.windows.WindowManager;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -58,13 +61,13 @@ import remoteagent.lib.SimaticAddressParser;
         iconBase = "com/alexprom/tsp_account/vis/cd disk.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
-@TopComponent.Registration(mode = "editor", openAtStartup = true)
-@ActionID(category = "Window", id = "com.alexprom.tsp_account.vis.TankDataTopComponent")
-@ActionReference(path = "Menu/Window" /*, position = 333 */)
+@TopComponent.Registration(mode = "editor", openAtStartup = false)
+/*@ActionID(category = "Window", id = "com.alexprom.tsp_account.vis.TankDataTopComponent")
+@ActionReference(path = "Menu/Window")
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_TankDataAction",
         preferredID = "TankDataTopComponent"
-)
+)*/
 @Messages({
     "CTL_TankDataAction=TankData",
     "CTL_TankDataTopComponent=TankData Window",
@@ -84,13 +87,14 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
     private List<CountersInitData> counters;
     //private Date logDate = new Date();
     //private DateFormat df = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+    private DAQ_Thread daqThread;
     
     public TankDataTopComponent() {
         
         initComponents();
         //setName(Bundle.CTL_TankDataTopComponent());
         //setToolTipText(Bundle.HINT_TankDataTopComponent());
-        putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
+        putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.FALSE);
         putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
@@ -185,39 +189,7 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel8 = new javax.swing.JPanel();
-        label35 = new java.awt.Label();
-        label36 = new java.awt.Label();
-        label37 = new java.awt.Label();
-        label38 = new java.awt.Label();
-        lbLevel17 = new javax.swing.JTextField();
-        lbVolume17 = new javax.swing.JTextField();
-        lbTemperature17 = new javax.swing.JTextField();
-        lbDensity17 = new javax.swing.JTextField();
-        pbLevel17 = new javax.swing.JProgressBar();
-        jLabel4 = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
-        label27 = new java.awt.Label();
-        label28 = new java.awt.Label();
-        label29 = new java.awt.Label();
-        label30 = new java.awt.Label();
-        lbLevel15 = new javax.swing.JTextField();
-        lbVolume15 = new javax.swing.JTextField();
-        lbTemperature15 = new javax.swing.JTextField();
-        lbDensity15 = new javax.swing.JTextField();
-        pbLevel15 = new javax.swing.JProgressBar();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
-        label31 = new java.awt.Label();
-        label32 = new java.awt.Label();
-        label33 = new java.awt.Label();
-        label34 = new java.awt.Label();
-        lbLevel16 = new javax.swing.JTextField();
-        lbVolume16 = new javax.swing.JTextField();
-        lbTemperature16 = new javax.swing.JTextField();
-        lbDensity16 = new javax.swing.JTextField();
-        pbLevel16 = new javax.swing.JProgressBar();
-        jLabel3 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         label39 = new java.awt.Label();
         label40 = new java.awt.Label();
@@ -240,6 +212,62 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
         lbDensity11 = new javax.swing.JTextField();
         pbLevel11 = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        label27 = new java.awt.Label();
+        label28 = new java.awt.Label();
+        label29 = new java.awt.Label();
+        label30 = new java.awt.Label();
+        lbLevel15 = new javax.swing.JTextField();
+        lbVolume15 = new javax.swing.JTextField();
+        lbTemperature15 = new javax.swing.JTextField();
+        lbDensity15 = new javax.swing.JTextField();
+        pbLevel15 = new javax.swing.JProgressBar();
+        jLabel2 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        label31 = new java.awt.Label();
+        label32 = new java.awt.Label();
+        label33 = new java.awt.Label();
+        label34 = new java.awt.Label();
+        lbLevel16 = new javax.swing.JTextField();
+        lbVolume16 = new javax.swing.JTextField();
+        lbTemperature16 = new javax.swing.JTextField();
+        lbDensity16 = new javax.swing.JTextField();
+        pbLevel16 = new javax.swing.JProgressBar();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        label35 = new java.awt.Label();
+        label36 = new java.awt.Label();
+        label37 = new java.awt.Label();
+        label38 = new java.awt.Label();
+        lbLevel17 = new javax.swing.JTextField();
+        lbVolume17 = new javax.swing.JTextField();
+        lbTemperature17 = new javax.swing.JTextField();
+        lbDensity17 = new javax.swing.JTextField();
+        pbLevel17 = new javax.swing.JProgressBar();
+        jLabel4 = new javax.swing.JLabel();
+        jPanel13 = new javax.swing.JPanel();
+        label55 = new java.awt.Label();
+        label56 = new java.awt.Label();
+        label57 = new java.awt.Label();
+        label58 = new java.awt.Label();
+        lbLevel23 = new javax.swing.JTextField();
+        lbVolume23 = new javax.swing.JTextField();
+        lbTemperature23 = new javax.swing.JTextField();
+        lbDensity23 = new javax.swing.JTextField();
+        pbLevel23 = new javax.swing.JProgressBar();
+        jLabel15 = new javax.swing.JLabel();
+        jPanel12 = new javax.swing.JPanel();
+        label51 = new java.awt.Label();
+        label52 = new java.awt.Label();
+        label53 = new java.awt.Label();
+        label54 = new java.awt.Label();
+        lbLevel32 = new javax.swing.JTextField();
+        lbVolume32 = new javax.swing.JTextField();
+        pbLevel32 = new javax.swing.JProgressBar();
+        jLabel14 = new javax.swing.JLabel();
+        lbDensity32 = new javax.swing.JFormattedTextField();
+        lbTemperature32 = new javax.swing.JFormattedTextField();
+        jPanel3 = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         label43 = new java.awt.Label();
         label44 = new java.awt.Label();
@@ -266,262 +294,81 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jPanel12 = new javax.swing.JPanel();
-        label51 = new java.awt.Label();
-        label52 = new java.awt.Label();
-        label53 = new java.awt.Label();
-        label54 = new java.awt.Label();
-        lbLevel32 = new javax.swing.JTextField();
-        lbVolume32 = new javax.swing.JTextField();
-        pbLevel32 = new javax.swing.JProgressBar();
-        jLabel14 = new javax.swing.JLabel();
-        lbDensity32 = new javax.swing.JFormattedTextField();
-        lbTemperature32 = new javax.swing.JFormattedTextField();
-        jPanel13 = new javax.swing.JPanel();
-        label55 = new java.awt.Label();
-        label56 = new java.awt.Label();
-        label57 = new java.awt.Label();
-        label58 = new java.awt.Label();
-        lbLevel23 = new javax.swing.JTextField();
-        lbVolume23 = new javax.swing.JTextField();
-        lbTemperature23 = new javax.swing.JTextField();
-        lbDensity23 = new javax.swing.JTextField();
-        pbLevel23 = new javax.swing.JProgressBar();
-        jLabel15 = new javax.swing.JLabel();
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel8.border.title"))); // NOI18N
-        jPanel8.setLayout(null);
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        label35.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label35.text")); // NOI18N
-        jPanel8.add(label35);
-        label35.setBounds(360, 60, 22, 20);
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0)), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel2.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 153, 0))); // NOI18N
+        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
 
-        label36.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label36.text")); // NOI18N
-        jPanel8.add(label36);
-        label36.setBounds(360, 90, 11, 20);
-
-        label37.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label37.text")); // NOI18N
-        jPanel8.add(label37);
-        label37.setBounds(360, 120, 18, 20);
-
-        label38.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label38.text")); // NOI18N
-        jPanel8.add(label38);
-        label38.setBounds(360, 150, 24, 20);
-
-        lbLevel17.setEditable(false);
-        lbLevel17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbLevel17.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbLevel17.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbLevel17.text")); // NOI18N
-        jPanel8.add(lbLevel17);
-        lbLevel17.setBounds(260, 60, 90, 21);
-
-        lbVolume17.setEditable(false);
-        lbVolume17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbVolume17.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbVolume17.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbVolume17.text")); // NOI18N
-        jPanel8.add(lbVolume17);
-        lbVolume17.setBounds(260, 90, 90, 21);
-
-        lbTemperature17.setEditable(false);
-        lbTemperature17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbTemperature17.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbTemperature17.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbTemperature17.text")); // NOI18N
-        jPanel8.add(lbTemperature17);
-        lbTemperature17.setBounds(260, 120, 90, 21);
-
-        lbDensity17.setEditable(false);
-        lbDensity17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbDensity17.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbDensity17.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbDensity17.text")); // NOI18N
-        jPanel8.add(lbDensity17);
-        lbDensity17.setBounds(260, 150, 90, 21);
-
-        pbLevel17.setOrientation(1);
-        pbLevel17.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        pbLevel17.setFocusable(false);
-        pbLevel17.setString(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.pbLevel17.string")); // NOI18N
-        jPanel8.add(pbLevel17);
-        pbLevel17.setBounds(170, 50, 19, 100);
-
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/alexprom/tsp_account/vis/tank_h.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jLabel4.text")); // NOI18N
-        jLabel4.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
-        jLabel4.setOpaque(true);
-        jPanel8.add(jLabel4);
-        jLabel4.setBounds(16, 27, 236, 140);
-
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel6.border.title"))); // NOI18N
-        jPanel6.setLayout(null);
-
-        label27.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label27.text")); // NOI18N
-        jPanel6.add(label27);
-        label27.setBounds(360, 60, 22, 20);
-
-        label28.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label28.text")); // NOI18N
-        jPanel6.add(label28);
-        label28.setBounds(360, 90, 11, 20);
-
-        label29.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label29.text")); // NOI18N
-        jPanel6.add(label29);
-        label29.setBounds(360, 120, 18, 20);
-
-        label30.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label30.text")); // NOI18N
-        jPanel6.add(label30);
-        label30.setBounds(360, 150, 24, 20);
-
-        lbLevel15.setEditable(false);
-        lbLevel15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbLevel15.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbLevel15.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbLevel15.text")); // NOI18N
-        jPanel6.add(lbLevel15);
-        lbLevel15.setBounds(260, 60, 90, 21);
-
-        lbVolume15.setEditable(false);
-        lbVolume15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbVolume15.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbVolume15.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbVolume15.text")); // NOI18N
-        jPanel6.add(lbVolume15);
-        lbVolume15.setBounds(260, 90, 90, 21);
-
-        lbTemperature15.setEditable(false);
-        lbTemperature15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbTemperature15.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbTemperature15.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbTemperature15.text")); // NOI18N
-        jPanel6.add(lbTemperature15);
-        lbTemperature15.setBounds(260, 120, 90, 21);
-
-        lbDensity15.setEditable(false);
-        lbDensity15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbDensity15.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbDensity15.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbDensity15.text")); // NOI18N
-        jPanel6.add(lbDensity15);
-        lbDensity15.setBounds(260, 150, 90, 21);
-
-        pbLevel15.setOrientation(1);
-        pbLevel15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        pbLevel15.setFocusable(false);
-        pbLevel15.setString(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.pbLevel15.string")); // NOI18N
-        jPanel6.add(pbLevel15);
-        pbLevel15.setBounds(170, 50, 19, 100);
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/alexprom/tsp_account/vis/tank_h.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jLabel2.text")); // NOI18N
-        jLabel2.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
-        jLabel2.setOpaque(true);
-        jPanel6.add(jLabel2);
-        jLabel2.setBounds(16, 27, 236, 140);
-
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel7.border.title"))); // NOI18N
-        jPanel7.setLayout(null);
-
-        label31.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label31.text")); // NOI18N
-        jPanel7.add(label31);
-        label31.setBounds(360, 60, 22, 20);
-
-        label32.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label32.text")); // NOI18N
-        jPanel7.add(label32);
-        label32.setBounds(360, 90, 11, 20);
-
-        label33.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label33.text")); // NOI18N
-        jPanel7.add(label33);
-        label33.setBounds(360, 120, 18, 20);
-
-        label34.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label34.text")); // NOI18N
-        jPanel7.add(label34);
-        label34.setBounds(360, 150, 24, 20);
-
-        lbLevel16.setEditable(false);
-        lbLevel16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbLevel16.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbLevel16.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbLevel16.text")); // NOI18N
-        jPanel7.add(lbLevel16);
-        lbLevel16.setBounds(260, 60, 90, 21);
-
-        lbVolume16.setEditable(false);
-        lbVolume16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbVolume16.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbVolume16.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbVolume16.text")); // NOI18N
-        jPanel7.add(lbVolume16);
-        lbVolume16.setBounds(260, 90, 90, 21);
-
-        lbTemperature16.setEditable(false);
-        lbTemperature16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbTemperature16.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbTemperature16.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbTemperature16.text")); // NOI18N
-        jPanel7.add(lbTemperature16);
-        lbTemperature16.setBounds(260, 120, 90, 21);
-
-        lbDensity16.setEditable(false);
-        lbDensity16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbDensity16.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbDensity16.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbDensity16.text")); // NOI18N
-        jPanel7.add(lbDensity16);
-        lbDensity16.setBounds(260, 150, 90, 21);
-
-        pbLevel16.setOrientation(1);
-        pbLevel16.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        pbLevel16.setFocusable(false);
-        pbLevel16.setString(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.pbLevel16.string")); // NOI18N
-        jPanel7.add(pbLevel16);
-        pbLevel16.setBounds(170, 50, 19, 100);
-
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/alexprom/tsp_account/vis/tank_h.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jLabel3.text")); // NOI18N
-        jLabel3.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
-        jLabel3.setOpaque(true);
-        jPanel7.add(jLabel3);
-        jLabel3.setBounds(16, 27, 236, 140);
-
-        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel9.border.title"))); // NOI18N
+        jPanel9.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 0)), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel9.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 153, 0))); // NOI18N
+        jPanel9.setForeground(new java.awt.Color(0, 153, 0));
         jPanel9.setLayout(null);
 
+        label39.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        label39.setForeground(new java.awt.Color(0, 153, 0));
         label39.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label39.text")); // NOI18N
         jPanel9.add(label39);
-        label39.setBounds(360, 60, 22, 20);
+        label39.setBounds(360, 60, 20, 19);
 
+        label40.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        label40.setForeground(new java.awt.Color(0, 153, 0));
         label40.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label40.text")); // NOI18N
         jPanel9.add(label40);
-        label40.setBounds(360, 90, 11, 20);
+        label40.setBounds(360, 90, 11, 19);
 
+        label41.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        label41.setForeground(new java.awt.Color(0, 153, 0));
         label41.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label41.text")); // NOI18N
         jPanel9.add(label41);
-        label41.setBounds(360, 120, 18, 20);
+        label41.setBounds(360, 120, 16, 19);
 
+        label42.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        label42.setForeground(new java.awt.Color(0, 153, 0));
         label42.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label42.text")); // NOI18N
         jPanel9.add(label42);
-        label42.setBounds(360, 150, 24, 20);
+        label42.setBounds(360, 150, 25, 19);
 
         lbLevel26.setEditable(false);
-        lbLevel26.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbLevel26.setBackground(new java.awt.Color(0, 0, 0));
+        lbLevel26.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lbLevel26.setForeground(new java.awt.Color(0, 153, 0));
         lbLevel26.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         lbLevel26.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.1.text")); // NOI18N
         lbLevel26.setName("1"); // NOI18N
         jPanel9.add(lbLevel26);
-        lbLevel26.setBounds(260, 60, 90, 21);
+        lbLevel26.setBounds(260, 60, 90, 20);
 
         lbVolume26.setEditable(false);
-        lbVolume26.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbVolume26.setBackground(new java.awt.Color(0, 0, 0));
+        lbVolume26.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lbVolume26.setForeground(new java.awt.Color(0, 153, 0));
         lbVolume26.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         lbVolume26.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.1.text")); // NOI18N
         lbVolume26.setName("1"); // NOI18N
         jPanel9.add(lbVolume26);
-        lbVolume26.setBounds(260, 90, 90, 21);
+        lbVolume26.setBounds(260, 90, 90, 20);
 
         lbTemperature26.setEditable(false);
-        lbTemperature26.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbTemperature26.setBackground(new java.awt.Color(0, 0, 0));
+        lbTemperature26.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lbTemperature26.setForeground(new java.awt.Color(0, 153, 0));
         lbTemperature26.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         lbTemperature26.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.1.text")); // NOI18N
         lbTemperature26.setName("1"); // NOI18N
         jPanel9.add(lbTemperature26);
-        lbTemperature26.setBounds(260, 120, 90, 21);
+        lbTemperature26.setBounds(260, 120, 90, 20);
 
         lbDensity26.setEditable(false);
-        lbDensity26.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbDensity26.setBackground(new java.awt.Color(0, 0, 0));
+        lbDensity26.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lbDensity26.setForeground(new java.awt.Color(0, 153, 0));
         lbDensity26.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         lbDensity26.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.1.text")); // NOI18N
         lbDensity26.setName("1"); // NOI18N
         jPanel9.add(lbDensity26);
-        lbDensity26.setBounds(260, 150, 90, 21);
+        lbDensity26.setBounds(260, 150, 90, 20);
 
         pbLevel26.setOrientation(1);
         pbLevel26.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -537,6 +384,7 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
         jPanel9.add(jLabel5);
         jLabel5.setBounds(16, 27, 236, 140);
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel1.border.title"))); // NOI18N
         jPanel1.setLayout(null);
 
@@ -598,6 +446,387 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
         jPanel1.add(jLabel1);
         jLabel1.setBounds(16, 27, 236, 140);
 
+        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel6.border.title"))); // NOI18N
+        jPanel6.setLayout(null);
+
+        label27.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label27.text")); // NOI18N
+        jPanel6.add(label27);
+        label27.setBounds(360, 60, 22, 20);
+
+        label28.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label28.text")); // NOI18N
+        jPanel6.add(label28);
+        label28.setBounds(360, 90, 11, 20);
+
+        label29.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label29.text")); // NOI18N
+        jPanel6.add(label29);
+        label29.setBounds(360, 120, 18, 20);
+
+        label30.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label30.text")); // NOI18N
+        jPanel6.add(label30);
+        label30.setBounds(360, 150, 24, 20);
+
+        lbLevel15.setEditable(false);
+        lbLevel15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbLevel15.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbLevel15.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbLevel15.text")); // NOI18N
+        jPanel6.add(lbLevel15);
+        lbLevel15.setBounds(260, 60, 90, 21);
+
+        lbVolume15.setEditable(false);
+        lbVolume15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbVolume15.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbVolume15.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbVolume15.text")); // NOI18N
+        jPanel6.add(lbVolume15);
+        lbVolume15.setBounds(260, 90, 90, 21);
+
+        lbTemperature15.setEditable(false);
+        lbTemperature15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbTemperature15.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbTemperature15.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbTemperature15.text")); // NOI18N
+        jPanel6.add(lbTemperature15);
+        lbTemperature15.setBounds(260, 120, 90, 21);
+
+        lbDensity15.setEditable(false);
+        lbDensity15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbDensity15.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbDensity15.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbDensity15.text")); // NOI18N
+        jPanel6.add(lbDensity15);
+        lbDensity15.setBounds(260, 150, 90, 21);
+
+        pbLevel15.setOrientation(1);
+        pbLevel15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pbLevel15.setFocusable(false);
+        pbLevel15.setString(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.pbLevel15.string")); // NOI18N
+        jPanel6.add(pbLevel15);
+        pbLevel15.setBounds(170, 50, 19, 100);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/alexprom/tsp_account/vis/tank_h.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jLabel2.text")); // NOI18N
+        jLabel2.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        jLabel2.setOpaque(true);
+        jPanel6.add(jLabel2);
+        jLabel2.setBounds(16, 27, 236, 140);
+
+        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel7.border.title"))); // NOI18N
+        jPanel7.setLayout(null);
+
+        label31.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label31.text")); // NOI18N
+        jPanel7.add(label31);
+        label31.setBounds(360, 60, 22, 20);
+
+        label32.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label32.text")); // NOI18N
+        jPanel7.add(label32);
+        label32.setBounds(360, 90, 11, 20);
+
+        label33.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label33.text")); // NOI18N
+        jPanel7.add(label33);
+        label33.setBounds(360, 120, 18, 20);
+
+        label34.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label34.text")); // NOI18N
+        jPanel7.add(label34);
+        label34.setBounds(360, 150, 24, 20);
+
+        lbLevel16.setEditable(false);
+        lbLevel16.setBackground(new java.awt.Color(255, 255, 255));
+        lbLevel16.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lbLevel16.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbLevel16.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbLevel16.text")); // NOI18N
+        jPanel7.add(lbLevel16);
+        lbLevel16.setBounds(260, 60, 90, 20);
+
+        lbVolume16.setEditable(false);
+        lbVolume16.setBackground(new java.awt.Color(255, 255, 255));
+        lbVolume16.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lbVolume16.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbVolume16.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbVolume16.text")); // NOI18N
+        jPanel7.add(lbVolume16);
+        lbVolume16.setBounds(260, 90, 90, 20);
+
+        lbTemperature16.setEditable(false);
+        lbTemperature16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbTemperature16.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbTemperature16.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbTemperature16.text")); // NOI18N
+        jPanel7.add(lbTemperature16);
+        lbTemperature16.setBounds(260, 120, 90, 21);
+
+        lbDensity16.setEditable(false);
+        lbDensity16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbDensity16.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbDensity16.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbDensity16.text")); // NOI18N
+        jPanel7.add(lbDensity16);
+        lbDensity16.setBounds(260, 150, 90, 21);
+
+        pbLevel16.setOrientation(1);
+        pbLevel16.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pbLevel16.setFocusable(false);
+        pbLevel16.setString(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.pbLevel16.string")); // NOI18N
+        jPanel7.add(pbLevel16);
+        pbLevel16.setBounds(170, 50, 19, 100);
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/alexprom/tsp_account/vis/tank_h.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jLabel3.text")); // NOI18N
+        jLabel3.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        jLabel3.setOpaque(true);
+        jPanel7.add(jLabel3);
+        jLabel3.setBounds(16, 27, 236, 140);
+
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel8.border.title"))); // NOI18N
+        jPanel8.setLayout(null);
+
+        label35.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label35.text")); // NOI18N
+        jPanel8.add(label35);
+        label35.setBounds(360, 60, 22, 20);
+
+        label36.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label36.text")); // NOI18N
+        jPanel8.add(label36);
+        label36.setBounds(360, 90, 11, 20);
+
+        label37.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label37.text")); // NOI18N
+        jPanel8.add(label37);
+        label37.setBounds(360, 120, 18, 20);
+
+        label38.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label38.text")); // NOI18N
+        jPanel8.add(label38);
+        label38.setBounds(360, 150, 24, 20);
+
+        lbLevel17.setEditable(false);
+        lbLevel17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbLevel17.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbLevel17.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbLevel17.text")); // NOI18N
+        jPanel8.add(lbLevel17);
+        lbLevel17.setBounds(260, 60, 90, 21);
+
+        lbVolume17.setEditable(false);
+        lbVolume17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbVolume17.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbVolume17.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbVolume17.text")); // NOI18N
+        jPanel8.add(lbVolume17);
+        lbVolume17.setBounds(260, 90, 90, 21);
+
+        lbTemperature17.setEditable(false);
+        lbTemperature17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbTemperature17.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbTemperature17.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbTemperature17.text")); // NOI18N
+        jPanel8.add(lbTemperature17);
+        lbTemperature17.setBounds(260, 120, 90, 21);
+
+        lbDensity17.setEditable(false);
+        lbDensity17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbDensity17.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbDensity17.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbDensity17.text")); // NOI18N
+        jPanel8.add(lbDensity17);
+        lbDensity17.setBounds(260, 150, 90, 21);
+
+        pbLevel17.setOrientation(1);
+        pbLevel17.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pbLevel17.setFocusable(false);
+        pbLevel17.setString(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.pbLevel17.string")); // NOI18N
+        jPanel8.add(pbLevel17);
+        pbLevel17.setBounds(170, 50, 19, 100);
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/alexprom/tsp_account/vis/tank_h.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jLabel4.text")); // NOI18N
+        jLabel4.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        jLabel4.setOpaque(true);
+        jPanel8.add(jLabel4);
+        jLabel4.setBounds(16, 27, 236, 140);
+
+        jPanel13.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel13.border.title"))); // NOI18N
+        jPanel13.setLayout(null);
+
+        label55.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label55.text")); // NOI18N
+        jPanel13.add(label55);
+        label55.setBounds(360, 60, 22, 20);
+
+        label56.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label56.text")); // NOI18N
+        jPanel13.add(label56);
+        label56.setBounds(360, 90, 11, 20);
+
+        label57.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label57.text")); // NOI18N
+        jPanel13.add(label57);
+        label57.setBounds(360, 120, 18, 20);
+
+        label58.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label58.text")); // NOI18N
+        jPanel13.add(label58);
+        label58.setBounds(360, 150, 24, 20);
+
+        lbLevel23.setEditable(false);
+        lbLevel23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbLevel23.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbLevel23.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbLevel23.text")); // NOI18N
+        jPanel13.add(lbLevel23);
+        lbLevel23.setBounds(260, 60, 90, 21);
+
+        lbVolume23.setEditable(false);
+        lbVolume23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbVolume23.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbVolume23.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbVolume23.text")); // NOI18N
+        jPanel13.add(lbVolume23);
+        lbVolume23.setBounds(260, 90, 90, 21);
+
+        lbTemperature23.setEditable(false);
+        lbTemperature23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbTemperature23.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbTemperature23.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbTemperature23.text")); // NOI18N
+        jPanel13.add(lbTemperature23);
+        lbTemperature23.setBounds(260, 120, 90, 21);
+
+        lbDensity23.setEditable(false);
+        lbDensity23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbDensity23.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbDensity23.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbDensity23.text")); // NOI18N
+        jPanel13.add(lbDensity23);
+        lbDensity23.setBounds(260, 150, 90, 21);
+
+        pbLevel23.setOrientation(1);
+        pbLevel23.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pbLevel23.setFocusable(false);
+        pbLevel23.setString(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.pbLevel23.string")); // NOI18N
+        jPanel13.add(pbLevel23);
+        pbLevel23.setBounds(170, 50, 19, 100);
+
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/alexprom/tsp_account/vis/tank_h.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel15, org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jLabel15.text")); // NOI18N
+        jLabel15.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        jLabel15.setOpaque(true);
+        jPanel13.add(jLabel15);
+        jLabel15.setBounds(16, 27, 236, 140);
+
+        jPanel12.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel12.border.title"))); // NOI18N
+        jPanel12.setLayout(null);
+
+        label51.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label51.text")); // NOI18N
+        jPanel12.add(label51);
+        label51.setBounds(360, 60, 22, 20);
+
+        label52.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label52.text")); // NOI18N
+        jPanel12.add(label52);
+        label52.setBounds(360, 90, 11, 20);
+
+        label53.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label53.text")); // NOI18N
+        jPanel12.add(label53);
+        label53.setBounds(360, 120, 18, 20);
+
+        label54.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label54.text")); // NOI18N
+        jPanel12.add(label54);
+        label54.setBounds(360, 150, 24, 20);
+
+        lbLevel32.setEditable(false);
+        lbLevel32.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbLevel32.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbLevel32.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbLevel32.text")); // NOI18N
+        jPanel12.add(lbLevel32);
+        lbLevel32.setBounds(260, 60, 90, 21);
+
+        lbVolume32.setEditable(false);
+        lbVolume32.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbVolume32.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbVolume32.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbVolume32.text")); // NOI18N
+        jPanel12.add(lbVolume32);
+        lbVolume32.setBounds(260, 90, 90, 21);
+
+        pbLevel32.setOrientation(1);
+        pbLevel32.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pbLevel32.setFocusable(false);
+        pbLevel32.setString(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.pbLevel32.string")); // NOI18N
+        jPanel12.add(pbLevel32);
+        pbLevel32.setBounds(170, 50, 19, 100);
+
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/alexprom/tsp_account/vis/tank_h.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel14, org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jLabel14.text")); // NOI18N
+        jLabel14.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        jLabel14.setOpaque(true);
+        jPanel12.add(jLabel14);
+        jLabel14.setBounds(16, 27, 236, 140);
+
+        lbDensity32.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbDensity32.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbDensity32.text")); // NOI18N
+        lbDensity32.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lbDensity32.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                lbDensity32FocusLost(evt);
+            }
+        });
+        lbDensity32.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lbDensity32ActionPerformed(evt);
+            }
+        });
+        lbDensity32.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                lbDensity32KeyPressed(evt);
+            }
+        });
+        jPanel12.add(lbDensity32);
+        lbDensity32.setBounds(260, 150, 90, 20);
+
+        lbTemperature32.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbTemperature32.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbTemperature32.text")); // NOI18N
+        lbTemperature32.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lbTemperature32.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                lbTemperature32FocusLost(evt);
+            }
+        });
+        lbTemperature32.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                lbTemperature32KeyPressed(evt);
+            }
+        });
+        jPanel12.add(lbTemperature32);
+        lbTemperature32.setBounds(260, 120, 90, 20);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel3.border.title"))); // NOI18N
+
+        jPanel10.setBackground(new java.awt.Color(255, 255, 255));
         jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel10.border.title"))); // NOI18N
         jPanel10.setLayout(null);
 
@@ -661,6 +890,7 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
         jPanel10.add(jLabel9);
         jLabel9.setBounds(20, 150, 70, 14);
 
+        jPanel11.setBackground(new java.awt.Color(255, 255, 255));
         jPanel11.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel11.border.title"))); // NOI18N
         jPanel11.setLayout(null);
 
@@ -724,203 +954,45 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
         jPanel11.add(jLabel13);
         jLabel13.setBounds(20, 150, 70, 14);
 
-        jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel12.border.title"))); // NOI18N
-        jPanel12.setLayout(null);
-
-        label51.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label51.text")); // NOI18N
-        jPanel12.add(label51);
-        label51.setBounds(360, 60, 22, 20);
-
-        label52.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label52.text")); // NOI18N
-        jPanel12.add(label52);
-        label52.setBounds(360, 90, 11, 20);
-
-        label53.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label53.text")); // NOI18N
-        jPanel12.add(label53);
-        label53.setBounds(360, 120, 18, 20);
-
-        label54.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label54.text")); // NOI18N
-        jPanel12.add(label54);
-        label54.setBounds(360, 150, 24, 20);
-
-        lbLevel32.setEditable(false);
-        lbLevel32.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbLevel32.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbLevel32.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbLevel32.text")); // NOI18N
-        jPanel12.add(lbLevel32);
-        lbLevel32.setBounds(260, 60, 90, 21);
-
-        lbVolume32.setEditable(false);
-        lbVolume32.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbVolume32.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbVolume32.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbVolume32.text")); // NOI18N
-        jPanel12.add(lbVolume32);
-        lbVolume32.setBounds(260, 90, 90, 21);
-
-        pbLevel32.setOrientation(1);
-        pbLevel32.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        pbLevel32.setFocusable(false);
-        pbLevel32.setString(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.pbLevel32.string")); // NOI18N
-        jPanel12.add(pbLevel32);
-        pbLevel32.setBounds(170, 50, 19, 100);
-
-        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/alexprom/tsp_account/vis/tank_h.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel14, org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jLabel14.text")); // NOI18N
-        jLabel14.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
-        jLabel14.setOpaque(true);
-        jPanel12.add(jLabel14);
-        jLabel14.setBounds(16, 27, 236, 140);
-
-        lbDensity32.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbDensity32.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbDensity32.text")); // NOI18N
-        lbDensity32.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                lbDensity32FocusLost(evt);
-            }
-        });
-        lbDensity32.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lbDensity32ActionPerformed(evt);
-            }
-        });
-        lbDensity32.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                lbDensity32KeyPressed(evt);
-            }
-        });
-        jPanel12.add(lbDensity32);
-        lbDensity32.setBounds(260, 150, 90, 20);
-
-        lbTemperature32.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbTemperature32.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbTemperature32.text")); // NOI18N
-        lbTemperature32.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                lbTemperature32FocusLost(evt);
-            }
-        });
-        lbTemperature32.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                lbTemperature32KeyPressed(evt);
-            }
-        });
-        jPanel12.add(lbTemperature32);
-        lbTemperature32.setBounds(260, 120, 90, 20);
-
-        jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jPanel13.border.title"))); // NOI18N
-        jPanel13.setLayout(null);
-
-        label55.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label55.text")); // NOI18N
-        jPanel13.add(label55);
-        label55.setBounds(360, 60, 22, 20);
-
-        label56.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label56.text")); // NOI18N
-        jPanel13.add(label56);
-        label56.setBounds(360, 90, 11, 20);
-
-        label57.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label57.text")); // NOI18N
-        jPanel13.add(label57);
-        label57.setBounds(360, 120, 18, 20);
-
-        label58.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.label58.text")); // NOI18N
-        jPanel13.add(label58);
-        label58.setBounds(360, 150, 24, 20);
-
-        lbLevel23.setEditable(false);
-        lbLevel23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbLevel23.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbLevel23.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbLevel23.text")); // NOI18N
-        jPanel13.add(lbLevel23);
-        lbLevel23.setBounds(260, 60, 90, 21);
-
-        lbVolume23.setEditable(false);
-        lbVolume23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbVolume23.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbVolume23.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbVolume23.text")); // NOI18N
-        jPanel13.add(lbVolume23);
-        lbVolume23.setBounds(260, 90, 90, 21);
-
-        lbTemperature23.setEditable(false);
-        lbTemperature23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbTemperature23.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbTemperature23.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbTemperature23.text")); // NOI18N
-        jPanel13.add(lbTemperature23);
-        lbTemperature23.setBounds(260, 120, 90, 21);
-
-        lbDensity23.setEditable(false);
-        lbDensity23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbDensity23.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        lbDensity23.setText(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.lbDensity23.text")); // NOI18N
-        jPanel13.add(lbDensity23);
-        lbDensity23.setBounds(260, 150, 90, 21);
-
-        pbLevel23.setOrientation(1);
-        pbLevel23.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        pbLevel23.setFocusable(false);
-        pbLevel23.setString(org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.pbLevel23.string")); // NOI18N
-        jPanel13.add(pbLevel23);
-        pbLevel23.setBounds(170, 50, 19, 100);
-
-        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/alexprom/tsp_account/vis/tank_h.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel15, org.openide.util.NbBundle.getMessage(TankDataTopComponent.class, "TankDataTopComponent.jLabel15.text")); // NOI18N
-        jLabel15.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
-        jLabel15.setOpaque(true);
-        jPanel13.add(jLabel15);
-        jLabel15.setBounds(16, 27, 236, 140);
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(334, 334, 334))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -969,6 +1041,8 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
@@ -1056,16 +1130,19 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
     @Override
     public void componentOpened() {
         updatePersistence();
+        DataLoggerTopComponent tc = (DataLoggerTopComponent)WindowManager.getDefault().findTopComponent("DataLoggerTopComponent");
+        plc = tc.getPlc();
+        daqThread = new DAQ_Thread(plc);
         Preferences pref = NbPreferences.forModule(dbConnectionSettingsPanel.class);
         pref.addPreferenceChangeListener(new PreferenceChangeListener() {
         @Override
         public void preferenceChange(PreferenceChangeEvent evt) {                        
             updatePersistence();
-            try {
+            /*try {
                 getTask();
             } catch (SAXException | IOException ex) {
                 Exceptions.printStackTrace(ex);
-            }
+            }*/
         }
         });        
         
@@ -1073,32 +1150,27 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
         tagsMgmt.addPreferenceChangeListener(new PreferenceChangeListener(){
             @Override
             public void preferenceChange(PreferenceChangeEvent evt) {
-                try {
+                /*try {
                     
                     getTask();
                 } catch (SAXException | IOException ex) {
                     Exceptions.printStackTrace(ex);
-                }
+                }*/
             }                
         });
         Preferences tankPref = NbPreferences.forModule(sensorSettingsPanel.class);
         tankPref.addPreferenceChangeListener(new PreferenceChangeListener() {
             @Override
             public void preferenceChange(PreferenceChangeEvent evt) {
-                try {
+                /*try {
                     getTask();
                 } catch (SAXException | IOException ex) {
                     Exceptions.printStackTrace(ex);
-                }
+                }*/
             }
         });
-        try {
-            getTask();
-            formThread = new Thread(this);
-            formThread.start();
-        } catch (SAXException | IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        formThread = new Thread(this);
+        formThread.start();
         
     }
 
@@ -1268,7 +1340,9 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
     private void updateVis(){
         
         int i=0;
-        for (TankData visTankData : tankData){
+        
+        TankData[] td = daqThread.getTankData();
+        for (TankData visTankData : td){
             Query query = em.createNamedQuery("TankDic.findByTankId");
             if (visTankData.getTankId()!=47){
             switch (i){
@@ -1276,7 +1350,7 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
                     query.setParameter("tankId", visTankData.getTankId());
                     List<TankDic> tankNames = query.getResultList();
                     for (TankDic names : tankNames){                
-                        jPanel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Ёмкость "+names.getTankName()+":")); 
+                        jPanel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Ёмкость "+names.getTankName()+":"));                         
                     }
             
                     lbLevel11.setText(String.format("%.1f", visTankData.getTankLevel()));
@@ -1378,21 +1452,23 @@ public final class TankDataTopComponent extends TopComponent implements Runnable
             }
         }
         
-        lbMass100.setText(String.format("%.1f", counterData[0].getCounterMass()));
-        lbVolume100.setText(String.format("%.1f", counterData[0].getCounterVolume()));
-        lbTemperature100.setText(String.format("%.1f", counterData[0].getCounterTemperature()));
-        lbDensity100.setText(String.format("%.4f", counterData[0].getCounterDensity()));
+        CounterData[] cd = daqThread.getCounterData();
+        lbMass100.setText(String.format("%.1f", cd[0].getCounterMass()));
+        lbVolume100.setText(String.format("%.1f", cd[0].getCounterVolume()));
+        lbTemperature100.setText(String.format("%.1f", cd[0].getCounterTemperature()));
+        lbDensity100.setText(String.format("%.4f", cd[0].getCounterDensity()));
         
-        lbMass101.setText(String.format("%.1f", counterData[1].getCounterMass()));
-        lbVolume101.setText(String.format("%.1f", counterData[1].getCounterVolume()));
-        lbTemperature101.setText(String.format("%.1f", counterData[1].getCounterTemperature()));
-        lbDensity101.setText(String.format("%.4f", counterData[1].getCounterDensity()));
+        lbMass101.setText(String.format("%.1f", cd[1].getCounterMass()));
+        lbVolume101.setText(String.format("%.1f", cd[1].getCounterVolume()));
+        lbTemperature101.setText(String.format("%.1f", cd[1].getCounterTemperature()));
+        lbDensity101.setText(String.format("%.4f", cd[1].getCounterDensity()));
     }
     
     @Override
     public void run() {
         while(true){                        
-            doTask();
+            //doTask();
+            updateVis();
             updatePersistence();
             try {
                 Thread.sleep(1000);

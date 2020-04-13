@@ -6,6 +6,8 @@
 package com.alexprom.tsp_account.vis;
 
 import com.alexprom.tsp_account.daq.CounterData;
+import com.alexprom.tsp_account.daq.DAQ_Thread;
+import com.alexprom.tsp_account.daq.DataLoggerTopComponent;
 import com.alexprom.tsp_account.daq.TankData;
 import com.alexprom.tsp_account.report_actions.TSPReportJpaController;
 import com.alexprom.tsp_account.report_db.TSPReport;
@@ -31,7 +33,8 @@ public final class saveData {
     
     public saveData(EntityManagerFactory emf, EntityManager em){
         
-        TankDataTopComponent tdtc = (TankDataTopComponent)WindowManager.getDefault().findTopComponent("TankDataTopComponent");
+        DataLoggerTopComponent tdtc = (DataLoggerTopComponent)WindowManager.getDefault().findTopComponent("DataLoggerTopComponent");
+        //DAQ_Thread thread = new DAQ_Thread(tdtc.getPlc());
         Date createDate = new Date();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat tf = new SimpleDateFormat("hh:mm");
@@ -40,7 +43,7 @@ public final class saveData {
         try {
             saved=false;
             em.getTransaction().begin();
-            for (TankData storeData : tdtc.tankData){                     
+            for (TankData storeData : tdtc.getTankData()){                     
                 reportId = getNewActId(em);
                 TSPReport openStoreAct = new TSPReport();
                 TSPReportJpaController openStoreNew = new TSPReportJpaController(emf);
@@ -54,7 +57,7 @@ public final class saveData {
                 openStoreAct.setTTemper(storeData.getTankTemperature());
                 openStoreNew.create(openStoreAct);
             }
-            for (CounterData  storeData : tdtc.counterData){
+            for (CounterData  storeData : tdtc.getCounterData()){
                 reportId = getNewActId(em);
                 TSPReport openStoreAct = new TSPReport();
                 TSPReportJpaController openStoreNew = new TSPReportJpaController(emf);

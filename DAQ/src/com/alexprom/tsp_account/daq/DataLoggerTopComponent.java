@@ -5,12 +5,25 @@
  */
 package com.alexprom.tsp_account.daq;
 
+import com.alexprom.connection.settings.dbConnectionSettingsPanel;
+import com.alexprom.tsp_account.report_db.GlobalEntityManager;
+import com.alexprom.tsp_account.report_db.TankDic;
+import java.awt.Font;
+import java.io.IOException;
+import java.util.List;
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
+import java.util.prefs.Preferences;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
+import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-import org.osgi.framework.Bundle;
+import org.openide.util.NbPreferences;
+import org.xml.sax.SAXException;
 
 /**
  * Top component which displays something.
@@ -25,35 +38,52 @@ import org.osgi.framework.Bundle;
         persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
 @TopComponent.Registration(mode = "output", openAtStartup = true)
-@ActionID(category = "Window", id = "com.alexprom.tsp_account.daq.DataLoggerTopComponent")
-@ActionReference(path = "Menu/Window" /*, position = 333 */)
+/*@ActionID(category = "Window", id = "com.alexprom.tsp_account.daq.DataLoggerTopComponent")
+@ActionReference(path = "Menu/Window" )
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_DataLoggerAction",
         preferredID = "DataLoggerTopComponent"
-)
+)*/
 @Messages({
-    "CTL_DataLoggerAction=DataLogger",
-    "CTL_DataLoggerTopComponent=DataLogger Window",
-    "HINT_DataLoggerTopComponent=This is a DataLogger window"
+    "CTL_DataLoggerAction=Текущие данные",
+    "CTL_DataLoggerTopComponent=Текущие данные",
+    "HINT_DataLoggerTopComponent=Текущие данные по всем приборам"
 })
-public final class DataLoggerTopComponent extends TopComponent {    
+public final class DataLoggerTopComponent extends TopComponent implements Runnable{                
+    private DAQ_Thread daqThread;
+    private Thread formThread;
+    private JPlcAgent plc;
+    private TankData[] tankData;
+    private CounterData[] counterData;
+    public EntityManager em = null;
+    private int oldTankData, newTankData, oldCounterData, newCounterData;
         
-    public void addStringToLog(String line){
-        jTextArea1.setText(line);
+    public void setTankData(TankData[] value){
+        tankData = value;
     }
     
+    public TankData[] getTankData(){
+        return tankData;
+    }
+    
+    public void setCounterData(CounterData[] value){
+        counterData = value;
+    }
+    
+    public CounterData[] getCounterData(){
+        return counterData;
+    }
     public DataLoggerTopComponent() {
+                
         initComponents();
-        //setName(Bundle.CTL_DataLoggerTopComponent());
-        //setToolTipText(Bundle.HINT_DataLoggerTopComponent());
+        setName(Bundle.CTL_DataLoggerTopComponent());
+        setToolTipText(Bundle.HINT_DataLoggerTopComponent());
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
+        this.setFont(new Font("Tahoma", 1, 11));
         
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setWrapStyleWord(true);
-    
     }
 
     /**
@@ -64,12 +94,107 @@ public final class DataLoggerTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        tblCurrentTanks = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblCurrentCounters = new javax.swing.JTable();
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.jPanel1.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+
+        tblCurrentTanks.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Резервуар", "Взлив, мм", "Объем, л", "t, °C", "p, кг/л", "Наполнение, %"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblCurrentTanks.setEnabled(false);
+        tblCurrentTanks.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblCurrentTanks);
+        if (tblCurrentTanks.getColumnModel().getColumnCount() > 0) {
+            tblCurrentTanks.getColumnModel().getColumn(0).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentTanks.columnModel.title0")); // NOI18N
+            tblCurrentTanks.getColumnModel().getColumn(1).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentTanks.columnModel.title1")); // NOI18N
+            tblCurrentTanks.getColumnModel().getColumn(2).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentTanks.columnModel.title2")); // NOI18N
+            tblCurrentTanks.getColumnModel().getColumn(3).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentTanks.columnModel.title3")); // NOI18N
+            tblCurrentTanks.getColumnModel().getColumn(4).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentTanks.columnModel.title4")); // NOI18N
+            tblCurrentTanks.getColumnModel().getColumn(5).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentTanks.columnModel.title5")); // NOI18N
+        }
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 723, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.jPanel2.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+
+        tblCurrentCounters.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Счетчик", "Масса, кг", "Объем, л", "t, °C", "p, кг/л"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblCurrentCounters.setEnabled(false);
+        tblCurrentCounters.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(tblCurrentCounters);
+        if (tblCurrentCounters.getColumnModel().getColumnCount() > 0) {
+            tblCurrentCounters.getColumnModel().getColumn(0).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentCounters.columnModel.title0")); // NOI18N
+            tblCurrentCounters.getColumnModel().getColumn(1).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentCounters.columnModel.title1")); // NOI18N
+            tblCurrentCounters.getColumnModel().getColumn(2).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentCounters.columnModel.title2")); // NOI18N
+            tblCurrentCounters.getColumnModel().getColumn(3).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentCounters.columnModel.title3")); // NOI18N
+            tblCurrentCounters.getColumnModel().getColumn(4).setHeaderValue(org.openide.util.NbBundle.getMessage(DataLoggerTopComponent.class, "DataLoggerTopComponent.tblCurrentCounters.columnModel.title4")); // NOI18N
+        }
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -77,27 +202,78 @@ public final class DataLoggerTopComponent extends TopComponent {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1289, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable tblCurrentCounters;
+    private javax.swing.JTable tblCurrentTanks;
     // End of variables declaration//GEN-END:variables
     @Override
-    public void componentOpened() {
-              
+    public void componentOpened() {        
+        Preferences pref = NbPreferences.forModule(dbConnectionSettingsPanel.class);
+        pref.addPreferenceChangeListener(new PreferenceChangeListener() {
+        @Override
+        public void preferenceChange(PreferenceChangeEvent evt) {                        
+            updatePersistence();
+            getTask();
+        }
+        });        
+        
+        Preferences tagsMgmt = NbPreferences.forModule(TagManagementPanel.class);
+        tagsMgmt.addPreferenceChangeListener(new PreferenceChangeListener(){
+            @Override
+            public void preferenceChange(PreferenceChangeEvent evt) {
+                getTask();
+            }                
+        });
+        Preferences tankPref = NbPreferences.forModule(sensorSettingsPanel.class);
+        tankPref.addPreferenceChangeListener(new PreferenceChangeListener() {
+            @Override
+            public void preferenceChange(PreferenceChangeEvent evt) {                
+                getTask();
+            }
+        });
+        
+        updatePersistence();
+        getTask();
+        
+        formThread = new Thread(this);
+        formThread.setPriority(Thread.MIN_PRIORITY);
+        formThread.start();
+        
     }
 
+    public void updatePersistence(){                        
+        GlobalEntityManager gem = new GlobalEntityManager();        
+        em = gem.getEm();        
+    }
+    
+    public JPlcAgent getPlc() {
+        return plc;
+    }
+
+    public void setPlc(JPlcAgent plc) {
+        this.plc = plc;
+    }
+    
     @Override
     public void componentClosed() {
         // TODO add custom code on component closing
@@ -113,6 +289,122 @@ public final class DataLoggerTopComponent extends TopComponent {
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
+    }
+
+    private void getTask(){
+        plc = new JPlcAgent(NbPreferences.forModule(TagManagementPanel.class).get("PLC_Address", "192.168.1.15"), NbPreferences.forModule(TagManagementPanel.class).get("PLC_Address", "192.168.1.15"), 1);
+        daqThread = new DAQ_Thread(this.getPlc());
+        tankData = daqThread.getTankData();
+        counterData = daqThread.getCounterData();
+    }
+    
+    private void updateVis(){
+        
+        try{               
+        newTankData = tankData.length;
+        if (newTankData!=0){
+            if (newTankData==oldTankData){
+                int row=0;
+                for (TankData tank : tankData){
+                    Query query = em.createNamedQuery("TankDic.findByTankId");
+                    query.setParameter("tankId", tank.getTankId());
+                    List<TankDic> tankName = query.getResultList();
+                    String tank_Name="";
+                    for (TankDic name : tankName){
+                        tank_Name = name.getTankName();
+                    }
+                    int fillLevel = Math.round(tank.getTankLevel().floatValue()/
+                    ((float)tank.getLevelTag().getMaxValue()-(float)tank.getLevelTag().getMinValue())*100);
+            
+                    tblCurrentTanks.getModel().setValueAt(tank_Name, row, 0);
+                    tblCurrentTanks.getModel().setValueAt(String.format("%.1f", tank.getTankLevel()), row, 1);
+                    tblCurrentTanks.getModel().setValueAt(String.format("%.1f", tank.getTabkVolume()), row, 2);
+                    tblCurrentTanks.getModel().setValueAt(String.format("%.1f", tank.getTankTemperature()), row, 3);
+                    tblCurrentTanks.getModel().setValueAt(String.format("%.4f", tank.getTankDensity()), row, 4);
+                    tblCurrentTanks.getModel().setValueAt(fillLevel, row, 5);
+                    row++;
+                }
+            }else{
+                DefaultTableModel tanksModel = new DefaultTableModel();
+                tanksModel.setColumnIdentifiers(new String [] {
+                "Резервуар", "Взлив, мм", "Объем, л", "t, °C", "p, кг/л", "Наполнение, %"
+                });
+                for (TankData tank : tankData){
+                    Query query = em.createNamedQuery("TankDic.findByTankId");
+                    query.setParameter("tankId", tank.getTankId());
+                    List<TankDic> tankName = query.getResultList();
+                    String tank_Name="";
+                    for (TankDic name : tankName){
+                        tank_Name = name.getTankName();
+                    }
+                    int fillLevel = Math.round(tank.getTankLevel().floatValue()/
+                    ((float)tank.getLevelTag().getMaxValue()-(float)tank.getLevelTag().getMinValue())*100);            
+                    tanksModel.addRow(new Object[] {tank_Name, 
+                                            String.format("%.1f", tank.getTankLevel()), 
+                                            String.format("%.1f", tank.getTabkVolume()), 
+                                                String.format("%.1f", tank.getTankTemperature()), 
+                                            String.format("%.4f", tank.getTankDensity()), 
+                                            fillLevel});                        
+                }        
+                tblCurrentTanks.setModel(tanksModel);
+                TableColumn fillColumn = tblCurrentTanks.getColumnModel().getColumn(tblCurrentTanks.getColumnCount()-1);
+                fillColumn.setCellRenderer(new ProgressBarRenderer());                        
+                tblCurrentTanks.setDefaultRenderer(Object.class, new CustomRenderer());                
+            }
+        }
+        oldTankData = newTankData;
+        
+        newCounterData = counterData.length;
+        if (newCounterData!=0){
+            if (newCounterData==oldCounterData){
+                int i=0;
+                for (CounterData counter : counterData){
+                    tblCurrentCounters.getModel().setValueAt(String.valueOf(i+1), i, 0);
+                    tblCurrentCounters.getModel().setValueAt(String.format("%.1f", counter.getCounterMass()), i, 1);
+                    tblCurrentCounters.getModel().setValueAt(String.format("%.1f", counter.getCounterVolume()), i, 2);
+                    tblCurrentCounters.getModel().setValueAt(String.format("%.1f", counter.getCounterTemperature()), i, 3);
+                    tblCurrentCounters.getModel().setValueAt(String.format("%.4f", counter.getCounterDensity()), i, 4);
+                    
+                    i++;
+                }
+            }else{
+                DefaultTableModel counterModel = new DefaultTableModel();
+                counterModel.setColumnIdentifiers(new String [] {
+                "Счетчик", "Масса, кг", "Объем, л", "t, °C", "p, кг/л"
+                });
+                int i=0;
+                for (CounterData counter : counterData){
+                    counterModel.addRow (new String[] {String.valueOf(i+1), 
+                                                String.format("%.1f", counter.getCounterMass()), 
+                                                String.format("%.1f", counter.getCounterVolume()), 
+                                                String.format("%.1f", counter.getCounterTemperature()), 
+                                                String.format("%.4f", counter.getCounterDensity())});
+                i++;
+                }
+            
+                tblCurrentCounters.setModel(counterModel);
+            
+                tblCurrentCounters.setDefaultRenderer(Object.class, new CustomRenderer());            
+            }
+        }
+        oldCounterData = newCounterData;
+        }catch (java.lang.ArrayIndexOutOfBoundsException ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    @Override
+    public void run() {
+        while (true){
+            try {
+                updateVis();
+                tankData = daqThread.getTankData();
+                counterData = daqThread.getCounterData();
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
     }
 
     

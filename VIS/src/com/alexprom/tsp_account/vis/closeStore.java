@@ -6,6 +6,7 @@
 package com.alexprom.tsp_account.vis;
 
 import com.alexprom.tsp_account.report_db.CountersInitData;
+import com.alexprom.tsp_account.report_db.GlobalEntityManager;
 import com.alexprom.tsp_account.report_db.TSPReport;
 import com.alexprom.tsp_account.report_db.TanksToAccount;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,6 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
-import org.openide.windows.WindowManager;
 
 @ActionID(
         category = "Tools",
@@ -67,9 +67,9 @@ public final class closeStore implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        TankDataTopComponent tdtc = (TankDataTopComponent)WindowManager.getDefault().findTopComponent("TankDataTopComponent");
-        EntityManager em = tdtc.em;
-        EntityManagerFactory emf = tdtc.emf;     
+        GlobalEntityManager gem = new GlobalEntityManager();
+        EntityManager em = gem.getEm();
+        EntityManagerFactory emf = gem.getEmf();
         Date createDate = new Date();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");        
         String createString = df.format(createDate);        

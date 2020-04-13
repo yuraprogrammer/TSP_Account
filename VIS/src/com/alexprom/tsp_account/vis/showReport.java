@@ -5,6 +5,7 @@
  */
 package com.alexprom.tsp_account.vis;
 
+import com.alexprom.tsp_account.report_db.GlobalEntityManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
@@ -15,9 +16,9 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
-import org.openide.windows.WindowManager;
 
 @ActionID(
         category = "File",
@@ -27,7 +28,10 @@ import org.openide.windows.WindowManager;
         iconBase = "com/alexprom/tsp_account/vis/preview.png",
         displayName = "#CTL_showReport"
 )
-@ActionReference(path = "Menu/File", position = 2150)
+@ActionReferences({
+    @ActionReference(path = "Menu/File", position = 2150),
+    @ActionReference(path = "Toolbars/File", position = 600)
+})        
 @Messages("CTL_showReport=Просмотр отчета")
 public final class showReport implements ActionListener {
 
@@ -39,8 +43,8 @@ public final class showReport implements ActionListener {
         dd.setModal(true);        
         Object result = DialogDisplayer.getDefault().notify(dd);
         if (null != result && DialogDescriptor.OK_OPTION == result) {
-            TankDataTopComponent tdtc = (TankDataTopComponent)WindowManager.getDefault().findTopComponent("TankDataTopComponent");
-            EntityManager em = tdtc.em;
+            GlobalEntityManager gem = new GlobalEntityManager();
+            EntityManager em = gem.getEm();
             if (em!=null){
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 TSP_DayReport report = new TSP_DayReport(em, df.format(frm.getActDate()));

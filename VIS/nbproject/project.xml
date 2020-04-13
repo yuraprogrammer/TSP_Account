@@ -105,6 +105,30 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.openide.explorer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.61.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.modules</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.47.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.nodes</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.42.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.openide.util</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -140,6 +164,10 @@
             <public-packages>
                 <package>com.alexprom.tsp_account.vis</package>
             </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/jfreechart-1.0.19.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jfreechart-1.0.19.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

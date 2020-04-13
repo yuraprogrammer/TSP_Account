@@ -126,6 +126,12 @@ public class JPlcAgent{
         return plcVal;
     }
     
+    public void writeFloatData(int numDB, int startOffset, int cnt, double value){
+        int res=-1;
+        byte[] by = Nodave.toPLCfloat(value);        
+        res=dc.writeBytes(Nodave.DB, numDB, startOffset, cnt, by);
+    }
+    
     public boolean readBooleanData(int numDB, int startOffset, int bit){
         boolean result=false;
         byte[] by;

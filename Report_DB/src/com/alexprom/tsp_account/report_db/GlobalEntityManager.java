@@ -22,10 +22,10 @@ public final class GlobalEntityManager implements iGlobalEntityManager{
     
     public GlobalEntityManager(){
         Preferences pref = NbPreferences.forModule(dbConnectionSettingsPanel.class);
-        setIpAddress(pref.get("ipAddress", ""));
-        setDbName(pref.get("dbName", ""));
-        setUserName(pref.get("userName", ""));
-        setUserPassword(pref.get("userPassword", ""));
+        setIpAddress(pref.get("ipAddress", "176.105.202.29"));
+        setDbName(pref.get("dbName", "TSP_Account"));
+        setUserName(pref.get("userName", "roman"));
+        setUserPassword(pref.get("userPassword", "roman"));
         updatePersistence();
         pref.addPreferenceChangeListener(new PreferenceChangeListener() {
         

@@ -5,6 +5,7 @@
  */
 package com.alexprom.tsp_account.vis;
 
+import com.alexprom.tsp_account.report_db.GlobalEntityManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.persistence.EntityManager;
@@ -18,18 +19,17 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
-import org.openide.windows.WindowManager;
 
 @ActionID(
         category = "Tools",
         id = "com.alexprom.tsp_account.vis.createCustomXML"
 )
 @ActionRegistration(
-        iconBase = "com/alexprom/tsp_account/vis/xml_2419.png",
+        iconBase = "com/alexprom/tsp_account/vis/xml_2273.png",
         displayName = "#CTL_createCustomXML"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Tools", position = 0),
+    @ActionReference(path = "Menu/File", position = 2200),
     @ActionReference(path = "Toolbars/File", position = 500)
 })
 @Messages("CTL_createCustomXML=Создать XML...")
@@ -45,8 +45,8 @@ public final class createCustomXML implements ActionListener {
             dd.setModal(true);        
             Object result = DialogDisplayer.getDefault().notify(dd);
             if (null != result && DialogDescriptor.OK_OPTION == result) {
-            TankDataTopComponent tdtc = (TankDataTopComponent)WindowManager.getDefault().findTopComponent("TankDataTopComponent");
-            EntityManager em = tdtc.em;
+            GlobalEntityManager gem = new GlobalEntityManager();
+            EntityManager em = gem.getEm();
             if (em!=null){                
                 createXML xml = new createXML(em, frm.getActDate());                
             }else{

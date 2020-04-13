@@ -1,10 +1,12 @@
 package remoteagent.lib;
 
+import com.alexprom.tsp_account.daq.JPlcAgent;
+
 /**
  *
  * @author yura_
  */
-public class PlcTag {
+public final class PlcTag {
     private String tagName = "NewTag";
     private String plcName = "PLC_1";
     private String S7Addr = "DB1.DBB0";
@@ -12,7 +14,16 @@ public class PlcTag {
     private double maxValue = 100000.0;
     private ProcessA currentValue = new ProcessA();
     private int tagId;
+    private JPlcAgent plc;
 
+    public JPlcAgent getPlc() {
+        return plc;
+    }
+
+    public void setPlc(JPlcAgent plc) {
+        this.plc = plc;
+    }
+    
     public int getTagId() {
         return tagId;
     }
@@ -25,10 +36,11 @@ public class PlcTag {
         
     }
     
-    public PlcTag(String tagName, String plcName, String S7Addr){
+    public PlcTag(String tagName, String plcName, String S7Addr, JPlcAgent plcAgent){
         setTagName(tagName);
         setPlcName(plcName);
         setS7Addr(S7Addr);
+        setPlc(plcAgent);
     }            
     
     public String getTagName() {

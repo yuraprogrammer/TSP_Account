@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="OptionsDialog">
+        <folder name="AccountSettings">
+            <file name="com-alexprom-tsp_account-vis-saveXMLOptionsPanelController.instance">
+                <!--com.alexprom.tsp_account.vis.saveXMLOptionsPanelController-->
+                <attr
+                    methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="com.alexprom.tsp_account.vis.saveXMLOptionsPanelController"/>
+                <attr
+                    bundlevalue="com.alexprom.tsp_account.vis.Bundle#AdvancedOption_DisplayName_saveXML" name="displayName"/>
+                <attr
+                    bundlevalue="com.alexprom.tsp_account.vis.Bundle#AdvancedOption_Keywords_saveXML" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="Advanced/saveXML"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Actions">
+        <folder name="Tools">
+            <file name="com-alexprom-tsp_account-vis-closeStore.instance">
+                <!--com.alexprom.tsp_account.vis.closeStore-->
+                <attr
+                    bundlevalue="com.alexprom.tsp_account.vis.Bundle#CTL_closeStore" name="displayName"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.alexprom.tsp_account.vis.closeStore"/>
+                <attr name="iconBase" stringvalue="com/alexprom/tsp_account/vis/down.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+            <file name="com-alexprom-tsp_account-vis-createCustomXML.instance">
+                <!--com.alexprom.tsp_account.vis.createCustomXML-->
+                <attr
+                    bundlevalue="com.alexprom.tsp_account.vis.Bundle#CTL_createCustomXML" name="displayName"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.alexprom.tsp_account.vis.createCustomXML"/>
+                <attr name="iconBase" stringvalue="com/alexprom/tsp_account/vis/xml_2273.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+            <file name="com-alexprom-tsp_account-vis-openStore.instance">
+                <!--com.alexprom.tsp_account.vis.openStore-->
+                <attr
+                    bundlevalue="com.alexprom.tsp_account.vis.Bundle#CTL_openStore" name="displayName"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.alexprom.tsp_account.vis.openStore"/>
+                <attr name="iconBase" stringvalue="com/alexprom/tsp_account/vis/up.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+        </folder>
+        <folder name="File">
+            <file name="com-alexprom-tsp_account-vis-showReport.instance">
+                <!--com.alexprom.tsp_account.vis.showReport-->
+                <attr
+                    bundlevalue="com.alexprom.tsp_account.vis.Bundle#CTL_showReport" name="displayName"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.alexprom.tsp_account.vis.showReport"/>
+                <attr name="iconBase" stringvalue="com/alexprom/tsp_account/vis/preview.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="File">
+            <file name="com-alexprom-tsp_account-vis-closeStore.shadow">
+                <!--com.alexprom.tsp_account.vis.closeStore-->
+                <attr name="originalFile" stringvalue="Actions/Tools/com-alexprom-tsp_account-vis-closeStore.instance"/>
+                <attr intvalue="1450" name="position"/>
+            </file>
+            <file name="com-alexprom-tsp_account-vis-createCustomXML.shadow">
+                <!--com.alexprom.tsp_account.vis.createCustomXML-->
+                <attr name="originalFile" stringvalue="Actions/Tools/com-alexprom-tsp_account-vis-createCustomXML.instance"/>
+                <attr intvalue="2200" name="position"/>
+            </file>
+            <file name="com-alexprom-tsp_account-vis-openStore.shadow">
+                <!--com.alexprom.tsp_account.vis.openStore-->
+                <attr name="originalFile" stringvalue="Actions/Tools/com-alexprom-tsp_account-vis-openStore.instance"/>
+                <attr intvalue="1300" name="position"/>
+            </file>
+            <file name="com-alexprom-tsp_account-vis-showReport.shadow">
+                <!--com.alexprom.tsp_account.vis.showReport-->
+                <attr name="originalFile" stringvalue="Actions/File/com-alexprom-tsp_account-vis-showReport.instance"/>
+                <attr intvalue="2150" name="position"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Toolbars">
+        <folder name="File">
+            <file name="com-alexprom-tsp_account-vis-createCustomXML.shadow">
+                <!--com.alexprom.tsp_account.vis.createCustomXML-->
+                <attr name="originalFile" stringvalue="Actions/Tools/com-alexprom-tsp_account-vis-createCustomXML.instance"/>
+                <attr intvalue="500" name="position"/>
+            </file>
+            <file name="com-alexprom-tsp_account-vis-showReport.shadow">
+                <!--com.alexprom.tsp_account.vis.showReport-->
+                <attr name="originalFile" stringvalue="Actions/File/com-alexprom-tsp_account-vis-showReport.instance"/>
+                <attr intvalue="600" name="position"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="TankDataTopComponent.settings">
+                <!--com.alexprom.tsp_account.vis.TankDataTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.alexprom.tsp_account.vis.TankDataTopComponent"/>
+</settings>
+]]></file>
+            <file name="counterVisDataTopComponent.settings">
+                <!--com.alexprom.tsp_account.vis.counterVisData--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.alexprom.tsp_account.vis.counterVisData"/>
+</settings>
+]]></file>
+            <file name="tankVisDataTopComponent.settings">
+                <!--com.alexprom.tsp_account.vis.tankVisData--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.alexprom.tsp_account.vis.tankVisData"/>
+</settings>
+]]></file>
+            <file name="tspAccountExplorerTopComponent.settings">
+                <!--com.alexprom.tsp_account.vis.tspAccountExplorerTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.alexprom.tsp_account.vis.tspAccountExplorerTopComponent"/>
+</settings>
+]]></file>
+        </folder>
+        <folder name="Modes">
+            <folder name="editor">
+                <file name="TankDataTopComponent.wstcref">
+                    <!--com.alexprom.tsp_account.vis.TankDataTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="TankDataTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+                <file name="counterVisDataTopComponent.wstcref">
+                    <!--com.alexprom.tsp_account.vis.counterVisData--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="counterVisDataTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+                <file name="tankVisDataTopComponent.wstcref">
+                    <!--com.alexprom.tsp_account.vis.tankVisData--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="tankVisDataTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+            </folder>
+            <folder name="explorer">
+                <file name="tspAccountExplorerTopComponent.wstcref">
+                    <!--com.alexprom.tsp_account.vis.tspAccountExplorerTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="tspAccountExplorerTopComponent"/>
+  <state opened="true"/>
+</tc-ref>
+]]></file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="com_alexprom_tsp_account_vis">
+                <file name="TankData" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.alexprom.tsp_account.vis.TankDataTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.alexprom.tsp_account.vis//TankData//EN"/>
+                </file>
+                <file name="tspAccountExplorer" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.alexprom.tsp_account.vis.tspAccountExplorerTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.alexprom.tsp_account.vis//tspAccountExplorer//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="com">
+                <folder name="alexprom">
+                    <folder name="tsp_account">
+                        <folder name="vis">
+                            <file name="TankDataTopComponent">
+                                <!--com.alexprom.tsp_account.vis.TankDataTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_alexprom_tsp_account_vis/TankData.instance"/>
+                            </file>
+                            <file name="tspAccountExplorerTopComponent">
+                                <!--com.alexprom.tsp_account.vis.tspAccountExplorerTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_alexprom_tsp_account_vis/tspAccountExplorer.instance"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="com_alexprom_tsp_account_vis">
+                <file name="TankData.instance">
+                    <!--com.alexprom.tsp_account.vis.TankDataTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.alexprom.tsp_account.vis.TankDataTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.alexprom.tsp_account.vis.TankDataTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+                <file name="tspAccountExplorer.instance">
+                    <!--com.alexprom.tsp_account.vis.tspAccountExplorerTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.alexprom.tsp_account.vis.tspAccountExplorerTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.alexprom.tsp_account.vis.tspAccountExplorerTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

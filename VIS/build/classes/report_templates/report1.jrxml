@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cb0f4d61-28b7-490f-b4e4-036c2d9411f5">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TSP"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<subDataset name="StartDate" uuid="db9a4c54-dd34-4cf0-ae71-e74900c3702c">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TSP"/>
+		<queryString language="SQL">
+			<![CDATA[select * from  "TSP_Report"]]>
+		</queryString>
+		<field name="daq_date" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="daq_date"/>
+		</field>
+		<field name="daq_time" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="daq_time"/>
+		</field>
+		<field name="t_temper" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="t_temper"/>
+		</field>
+		<field name="t_level" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="t_level"/>
+		</field>
+		<field name="t_density" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="t_density"/>
+		</field>
+		<field name="t_volume" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="t_volume"/>
+		</field>
+	</subDataset>
+	<queryString>
+		<![CDATA[select * from TSP_Report]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<field name="tankID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="tankID"/>
+	</field>
+	<field name="daq_date" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="daq_date"/>
+	</field>
+	<field name="daq_time" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="daq_time"/>
+	</field>
+	<field name="t_temper" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_temper"/>
+	</field>
+	<field name="t_level" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_level"/>
+	</field>
+	<field name="t_density" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_density"/>
+	</field>
+	<field name="t_volume" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="t_volume"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<image>
+				<reportElement x="410" y="0" width="143" height="25" uuid="721d7178-b108-40dc-a354-11224bd4d137"/>
+				<imageExpression><![CDATA["C:\\Projects\\GitHub\\OilPlant\\UPPG_Reports\\report_templates\\alexprom_new.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="110" y="30" width="363" height="22" uuid="38a5d3c2-7f7b-4603-b20b-a38fda4326b7"/>
+				<textElement textAlignment="Center">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Отчет по складу на начало суток]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement x="450" y="11" width="100" height="20" uuid="da4e6f99-9a0d-4d6d-ad61-23e57904c1ec"/>
+				<textFieldExpression><![CDATA[$F{daq_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

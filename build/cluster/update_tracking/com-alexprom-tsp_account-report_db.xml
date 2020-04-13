@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="com.alexprom.tsp_account.report_db">
+    <module_version install_time="1586806082622" last="true" origin="installer" specification_version="1.1.5">
+        <file crc="1111733430" name="config/Modules/com-alexprom-tsp_account-report_db.xml"/>
+        <file crc="326888459" name="modules/com-alexprom-tsp_account-report_db.jar"/>
+        <file crc="3556291051" name="modules/ext/ReportDB.jar"/>
+    </module_version>
+</module>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="com.alexprom.tsp_account.sqldriver">
+    <module_version install_time="1586806081924" last="true" origin="installer" specification_version="1.0">
+        <file crc="2163490183" name="config/Modules/com-alexprom-tsp_account-sqldriver.xml"/>
+        <file crc="1051892861" name="modules/com-alexprom-tsp_account-sqldriver.jar"/>
+        <file crc="908596132" name="modules/ext/sqljdbc42.jar"/>
+    </module_version>
+</module>

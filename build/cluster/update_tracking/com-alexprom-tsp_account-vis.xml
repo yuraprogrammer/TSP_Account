@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="com.alexprom.tsp_account.vis">
+    <module_version install_time="1586817914850" last="true" origin="installer" specification_version="1.7.7">
+        <file crc="3702530986" name="config/Modules/com-alexprom-tsp_account-vis.xml"/>
+        <file crc="4008049205" name="modules/com-alexprom-tsp_account-vis.jar"/>
+        <file crc="3721340431" name="modules/ext/jfreechart-1.0.19.jar"/>
+    </module_version>
+</module>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="com.alexprom.tsp_account.datechooser">
+    <module_version install_time="1586806081258" last="true" origin="installer" specification_version="1.0">
+        <file crc="729481745" name="config/Modules/com-alexprom-tsp_account-datechooser.xml"/>
+        <file crc="2449321919" name="modules/com-alexprom-tsp_account-datechooser.jar"/>
+        <file crc="3342703036" name="modules/ext/DateChooser.jar"/>
+    </module_version>
+</module>

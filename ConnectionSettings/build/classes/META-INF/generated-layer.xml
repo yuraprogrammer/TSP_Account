@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="OptionsDialog">
+        <folder name="connectionSettings">
+            <file name="com-alexprom-connection-settings-dbConnectionSettingsOptionsPanelController.instance">
+                <!--com.alexprom.connection.settings.dbConnectionSettingsOptionsPanelController-->
+                <attr
+                    methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="com.alexprom.connection.settings.dbConnectionSettingsOptionsPanelController"/>
+                <attr
+                    bundlevalue="com.alexprom.connection.settings.Bundle#AdvancedOption_DisplayName_dbConnectionSettings" name="displayName"/>
+                <attr
+                    bundlevalue="com.alexprom.connection.settings.Bundle#AdvancedOption_Keywords_dbConnectionSettings" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="connectionSettings/dbConnectionSettings"/>
+            </file>
+            <!--com.alexprom.connection.settings-->
+            <attr intvalue="0" name="position"/>
+        </folder>
+        <file name="connectionSettings.instance">
+            <!--com.alexprom.connection.settings-->
+            <attr
+                methodvalue="org.netbeans.spi.options.OptionsCategory.createCategory" name="instanceCreate"/>
+            <attr name="advancedOptionsFolder" stringvalue="OptionsDialog/connectionSettings"/>
+            <attr
+                bundlevalue="com.alexprom.connection.settings.Bundle#OptionsCategory_Name_connectionSettings" name="categoryName"/>
+            <attr name="iconBase" stringvalue="com/alexprom/connection/settings/database.png"/>
+            <attr
+                bundlevalue="com.alexprom.connection.settings.Bundle#OptionsCategory_Keywords_connectionSettings" name="keywords"/>
+            <attr name="keywordsCategory" stringvalue="connectionSettings"/>
+        </file>
+    </folder>
+</filesystem>

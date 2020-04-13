@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="OptionsDialog">
+        <folder name="AccountSettings">
+            <file name="com-alexprom-tsp_account-daq-TagManagementOptionsPanelController.instance">
+                <!--com.alexprom.tsp_account.daq.TagManagementOptionsPanelController-->
+                <attr
+                    methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="com.alexprom.tsp_account.daq.TagManagementOptionsPanelController"/>
+                <attr
+                    bundlevalue="com.alexprom.tsp_account.daq.Bundle#AdvancedOption_DisplayName_TagManagement" name="displayName"/>
+                <attr
+                    bundlevalue="com.alexprom.tsp_account.daq.Bundle#AdvancedOption_Keywords_TagManagement" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="AccountSettings/TagManagement"/>
+            </file>
+            <file name="com-alexprom-tsp_account-daq-sensorSettingsOptionsPanelController.instance">
+                <!--com.alexprom.tsp_account.daq.sensorSettingsOptionsPanelController-->
+                <attr
+                    methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="com.alexprom.tsp_account.daq.sensorSettingsOptionsPanelController"/>
+                <attr
+                    bundlevalue="com.alexprom.tsp_account.daq.Bundle#AdvancedOption_DisplayName_sensorSettings" name="displayName"/>
+                <attr
+                    bundlevalue="com.alexprom.tsp_account.daq.Bundle#AdvancedOption_Keywords_sensorSettings" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="AccountSettings/sensorSettings"/>
+            </file>
+            <!--com.alexprom.tsp_account.daq-->
+            <attr intvalue="0" name="position"/>
+        </folder>
+        <file name="AccountSettings.instance">
+            <!--com.alexprom.tsp_account.daq-->
+            <attr
+                methodvalue="org.netbeans.spi.options.OptionsCategory.createCategory" name="instanceCreate"/>
+            <attr name="advancedOptionsFolder" stringvalue="OptionsDialog/AccountSettings"/>
+            <attr
+                bundlevalue="com.alexprom.tsp_account.daq.Bundle#OptionsCategory_Name_AccountSettings" name="categoryName"/>
+            <attr name="iconBase" stringvalue="com/alexprom/tsp_account/daq/certificate.png"/>
+            <attr
+                bundlevalue="com.alexprom.tsp_account.daq.Bundle#OptionsCategory_Keywords_AccountSettings" name="keywords"/>
+            <attr name="keywordsCategory" stringvalue="AccountSettings"/>
+        </file>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="DataLoggerTopComponent.settings">
+                <!--com.alexprom.tsp_account.daq.DataLoggerTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.alexprom.tsp_account.daq.DataLoggerTopComponent"/>
+</settings>
+]]></file>
+        </folder>
+        <folder name="Modes">
+            <folder name="output">
+                <file name="DataLoggerTopComponent.wstcref">
+                    <!--com.alexprom.tsp_account.daq.DataLoggerTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="DataLoggerTopComponent"/>
+  <state opened="true"/>
+</tc-ref>
+]]></file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="com_alexprom_tsp_account_daq">
+                <file name="DataLogger" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.alexprom.tsp_account.daq.DataLoggerTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.alexprom.tsp_account.daq//DataLogger//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="com">
+                <folder name="alexprom">
+                    <folder name="tsp_account">
+                        <folder name="daq">
+                            <file name="DataLoggerTopComponent">
+                                <!--com.alexprom.tsp_account.daq.DataLoggerTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_alexprom_tsp_account_daq/DataLogger.instance"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="com_alexprom_tsp_account_daq">
+                <file name="DataLogger.instance">
+                    <!--com.alexprom.tsp_account.daq.DataLoggerTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.alexprom.tsp_account.daq.DataLoggerTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.alexprom.tsp_account.daq.DataLoggerTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

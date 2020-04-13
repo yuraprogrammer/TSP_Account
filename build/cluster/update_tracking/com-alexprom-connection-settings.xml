@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="com.alexprom.connection.settings">
+    <module_version install_time="1586806082233" last="true" origin="installer" specification_version="1.0.2">
+        <file crc="4220182531" name="config/Modules/com-alexprom-connection-settings.xml"/>
+        <file crc="9532129" name="modules/com-alexprom-connection-settings.jar"/>
+    </module_version>
+</module>

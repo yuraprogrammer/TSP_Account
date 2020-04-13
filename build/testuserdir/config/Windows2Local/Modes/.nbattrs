@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="editor">
+        <attr name="WinSys-TCRef-Order" stringvalue="tankVisDataTopComponent_36/counterVisDataTopComponent_1/TankDataTopComponent/tankVisDataTopComponent/counterVisDataTopComponent/tankVisDataTopComponent_1/tankVisDataTopComponent_2/tankVisDataTopComponent_3/tankVisDataTopComponent_4/tankVisDataTopComponent_5/tankVisDataTopComponent_6/tankVisDataTopComponent_7/tankVisDataTopComponent_8/tankVisDataTopComponent_9/tankVisDataTopComponent_10/tankVisDataTopComponent_11/tankVisDataTopComponent_12/tankVisDataTopComponent_13/tankVisDataTopComponent_14/tankVisDataTopComponent_15/tankVisDataTopComponent_16/tankVisDataTopComponent_17/tankVisDataTopComponent_18/tankVisDataTopComponent_19/tankVisDataTopComponent_20/tankVisDataTopComponent_21/tankVisDataTopComponent_22/tankVisDataTopComponent_23/tankVisDataTopComponent_24/tankVisDataTopComponent_25/tankVisDataTopComponent_26/tankVisDataTopComponent_27/tankVisDataTopComponent_28/tankVisDataTopComponent_29/tankVisDataTopComponent_30/tankVisDataTopComponent_31/tankVisDataTopComponent_32/tankVisDataTopComponent_33/tankVisDataTopComponent_34/tankVisDataTopComponent_35/tankVisDataTopComponent_37/tankVisDataTopComponent_38/tankVisDataTopComponent_39/tankVisDataTopComponent_40/tankVisDataTopComponent_41/tankVisDataTopComponent_42/counterVisDataTopComponent_2/tankVisDataTopComponent_43/tankVisDataTopComponent_44/tankVisDataTopComponent_45/counterVisDataTopComponent_3/counterVisDataTopComponent_4/tankVisDataTopComponent_46/tankVisDataTopComponent_47/tankVisDataTopComponent_48/tankVisDataTopComponent_49/tankVisDataTopComponent_50/tankVisDataTopComponent_51/tankVisDataTopComponent_52/tankVisDataTopComponent_53/tankVisDataTopComponent_54/tankVisDataTopComponent_55/tankVisDataTopComponent_56/tankVisDataTopComponent_57/counterVisDataTopComponent_5/tankVisDataTopComponent_58/tankVisDataTopComponent_59/tankVisDataTopComponent_60/tankVisDataTopComponent_61/tankVisDataTopComponent_62/tankVisDataTopComponent_63/tankVisDataTopComponent_64/tankVisDataTopComponent_65/tankVisDataTopComponent_66/tankVisDataTopComponent_67/tankVisDataTopComponent_68/tankVisDataTopComponent_69/tankVisDataTopComponent_70/tankVisDataTopComponent_71/tankVisDataTopComponent_72/tankVisDataTopComponent_73/tankVisDataTopComponent_74/counterVisDataTopComponent_6/counterVisDataTopComponent_7/counterVisDataTopComponent_8/counterVisDataTopComponent_9/counterVisDataTopComponent_10/counterVisDataTopComponent_11/counterVisDataTopComponent_12/counterVisDataTopComponent_13/counterVisDataTopComponent_14"/>
+    </fileobject>
+    <fileobject name="explorer">
+        <attr name="WinSys-TCRef-Order" stringvalue="tspAccountExplorerTopComponent"/>
+    </fileobject>
+    <fileobject name="output">
+        <attr name="WinSys-TCRef-Order" stringvalue="DataLoggerTopComponent/output"/>
+    </fileobject>
+    <fileobject name="properties">
+        <attr name="WinSys-TCRef-Order" stringvalue="properties"/>
+    </fileobject>
+</attributes>

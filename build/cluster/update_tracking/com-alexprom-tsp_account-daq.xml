@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="com.alexprom.tsp_account.daq">
+    <module_version install_time="1586817934934" last="true" origin="installer" specification_version="1.2.9">
+        <file crc="270891118" name="config/Modules/com-alexprom-tsp_account-daq.xml"/>
+        <file crc="1222660578" name="modules/com-alexprom-tsp_account-daq.jar"/>
+        <file crc="3342703036" name="modules/ext/DateChooser.jar"/>
+    </module_version>
+</module>

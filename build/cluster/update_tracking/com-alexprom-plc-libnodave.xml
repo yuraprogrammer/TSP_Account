@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="com.alexprom.plc.libnodave">
+    <module_version install_time="1586806081000" last="true" origin="installer" specification_version="1.0">
+        <file crc="1175456010" name="config/Modules/com-alexprom-plc-libnodave.xml"/>
+        <file crc="3446095975" name="modules/com-alexprom-plc-libnodave.jar"/>
+        <file crc="992841404" name="modules/ext/Libnodave.jar"/>
+    </module_version>
+</module>

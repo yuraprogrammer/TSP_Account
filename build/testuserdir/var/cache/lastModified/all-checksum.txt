@@ -1,0 +1,10 @@
+C:\Program Files (x86)\NetBeans 8.1\platform=1572520936323
+cluster.C:/Projects/GitHub/TSP_Account/build/cluster=1586817511166
+cluster.C:/Program Files (x86)/NetBeans 8.1/nb=1572520936323
+cluster.C:/Program Files (x86)/NetBeans 8.1/platform=1572520936323
+user=1586817511166
+crc=39
+locale=ru_RU
+branding=tsp_account
+java.version=1.8.0_172
+java.vm.version=25.172-b11

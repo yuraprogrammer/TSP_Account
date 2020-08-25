@@ -81,9 +81,8 @@ public class JPlcAgent{
         dc = new TCPConnection(i, 0, 1);
     }
     
-    private int tryReconnect() throws java.lang.NullPointerException, Exception{
-        int res=-1;
-        
+    public int tryReconnect() throws java.lang.NullPointerException, Exception{
+        int res=-1;        
             dc.disconnectPLC();
             di.disconnectAdapter();
             sock.close();

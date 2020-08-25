@@ -9,7 +9,6 @@ import com.alexprom.connection.settings.dbConnectionSettingsPanel;
 import com.alexprom.tsp_account.report_db.GlobalEntityManager;
 import com.alexprom.tsp_account.report_db.TankDic;
 import java.awt.Font;
-import java.io.IOException;
 import java.util.List;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
@@ -23,7 +22,6 @@ import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
-import org.xml.sax.SAXException;
 
 /**
  * Top component which displays something.
@@ -57,7 +55,9 @@ public final class DataLoggerTopComponent extends TopComponent implements Runnab
     private CounterData[] counterData;
     public EntityManager em = null;
     private int oldTankData, newTankData, oldCounterData, newCounterData;
-        
+    private boolean devicesChanged=false;
+    public boolean devicesDAQ_Restarted=false;
+    
     public void setTankData(TankData[] value){
         tankData = value;
     }
@@ -232,23 +232,30 @@ public final class DataLoggerTopComponent extends TopComponent implements Runnab
         pref.addPreferenceChangeListener(new PreferenceChangeListener() {
         @Override
         public void preferenceChange(PreferenceChangeEvent evt) {                        
+            System.out.println("Restarting database communication...");
             updatePersistence();
-            getTask();
+            //getTask();
+            System.out.println("Database communication restarted");
         }
         });        
         
         Preferences tagsMgmt = NbPreferences.forModule(TagManagementPanel.class);
         tagsMgmt.addPreferenceChangeListener(new PreferenceChangeListener(){
             @Override
-            public void preferenceChange(PreferenceChangeEvent evt) {
-                getTask();
+            public void preferenceChange(PreferenceChangeEvent evt) {                
+                devicesDAQ_Restarted=true;
+                getTask();      
+                resumeUpdateVis();
             }                
         });
+        
         Preferences tankPref = NbPreferences.forModule(sensorSettingsPanel.class);
         tankPref.addPreferenceChangeListener(new PreferenceChangeListener() {
             @Override
-            public void preferenceChange(PreferenceChangeEvent evt) {                
-                getTask();
+            public void preferenceChange(PreferenceChangeEvent evt) {                                                
+                devicesDAQ_Restarted=true;
+                getTask(); 
+                resumeUpdateVis();
             }
         });
         
@@ -291,15 +298,16 @@ public final class DataLoggerTopComponent extends TopComponent implements Runnab
         // TODO read your settings according to their version
     }
 
-    private void getTask(){
+    private void getTask(){        
+        
         plc = new JPlcAgent(NbPreferences.forModule(TagManagementPanel.class).get("PLC_Address", "192.168.1.15"), NbPreferences.forModule(TagManagementPanel.class).get("PLC_Address", "192.168.1.15"), 1);
         daqThread = new DAQ_Thread(this.getPlc());
         tankData = daqThread.getTankData();
-        counterData = daqThread.getCounterData();
+        counterData = daqThread.getCounterData();                
     }
     
     private void updateVis(){
-        
+        if ((tankData!=null) && (counterData!=null)){
         try{               
         newTankData = tankData.length;
         if (newTankData!=0){
@@ -354,6 +362,7 @@ public final class DataLoggerTopComponent extends TopComponent implements Runnab
         }
         oldTankData = newTankData;
         
+        
         newCounterData = counterData.length;
         if (newCounterData!=0){
             if (newCounterData==oldCounterData){
@@ -389,23 +398,38 @@ public final class DataLoggerTopComponent extends TopComponent implements Runnab
         }
         oldCounterData = newCounterData;
         }catch (java.lang.ArrayIndexOutOfBoundsException ex){
-            ex.printStackTrace();
+         
         }
+        }
+    }
+       
+    synchronized void resumeUpdateVis(){        
+        devicesDAQ_Restarted=false;
+        notify();
     }
     
     @Override
     public void run() {
         while (true){
-            try {
-                updateVis();
-                tankData = daqThread.getTankData();
-                counterData = daqThread.getCounterData();
+            synchronized(this){
+                while(devicesDAQ_Restarted){
+                    try {
+                        wait();
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }            
+            
+            tankData = daqThread.getTankData();
+            counterData = daqThread.getCounterData();
+            updateVis();
+            try {                    
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            
+            }                        
         }
-    }
-
-    
+    }    
 }
+

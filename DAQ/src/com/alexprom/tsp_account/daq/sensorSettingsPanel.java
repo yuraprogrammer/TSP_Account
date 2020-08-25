@@ -486,7 +486,7 @@ public final class sensorSettingsPanel extends javax.swing.JPanel {
     }
 
     void store() {
-        NbPreferences.forModule(this.getClass()).putDouble("Dummy", Math.random());
+        NbPreferences.forModule(this.getClass()).putDouble("Devices", Math.random()*100);
     }
 
     private void editTankFields(int row, int column){

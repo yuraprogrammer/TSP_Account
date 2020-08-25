@@ -35,7 +35,7 @@ public final class DAQ_Thread implements Runnable{
     private List<TanksToAccount> tanks;
     private List<CountersInitData> counters;
     private JPlcAgent plc;    
-    
+    private int timeout;
     public DAQ_Thread(JPlcAgent plc){
         this.plc=plc;
         try {
@@ -63,8 +63,7 @@ public final class DAQ_Thread implements Runnable{
     public void setPlc(JPlcAgent plc) {
         this.plc = plc;
     }
-    private Double oldDensity_32=0.0, newDensity_32=0.0, oldTemperature_32=0.0, newTemperature_32=0.0;
-        
+            
     private SimaticAddressParser setSimaticTag(PlcTag plcTag){        
         SimaticAddressParser tags = new SimaticAddressParser(plcTag.getS7Addr());        
         return tags;
@@ -142,8 +141,9 @@ public final class DAQ_Thread implements Runnable{
         int count = tagsCnt.size();
         if (count!=0){
             if (plc.Connected){
-            for (TankData  accountTanks : tankData){                
-                accountTanks.setTankLevel(BigDecimal.valueOf(accountTanks.getLevelTag().getPlc().readFloatData(accountTanks.getLevelS7().getDbNum(), 
+                timeout=0;
+                for (TankData  accountTanks : tankData){                
+                    accountTanks.setTankLevel(BigDecimal.valueOf(accountTanks.getLevelTag().getPlc().readFloatData(accountTanks.getLevelS7().getDbNum(), 
                         accountTanks.getLevelS7().getStartAddress(), 
                         accountTanks.getLevelS7().getByteCnt())));
                 
@@ -153,34 +153,43 @@ public final class DAQ_Thread implements Runnable{
                             accountTanks.getDensityS7().getStartAddress(), 
                             accountTanks.getDensityS7().getByteCnt())));
                 
-                Query query = em.createNamedQuery("GradView.findByTankIdLevel");
-                query.setParameter("tankId", accountTanks.getTankId());
-                query.setParameter("matLevel", accountTanks.getTankLevel());
-                List<GradView> list;
-                list = query.getResultList();
-                if (!list.isEmpty()){
-                    accountTanks.setTankVolume(BigDecimal.valueOf(list.get(0).getMatVolume().doubleValue()));
-                }else{                    
-                    accountTanks.setTankVolume(BigDecimal.ZERO);
-                }                                
-            }
+                    Query query = em.createNamedQuery("GradView.findByTankIdLevel");
+                    query.setParameter("tankId", accountTanks.getTankId());
+                    query.setParameter("matLevel", accountTanks.getTankLevel());
+                    List<GradView> list;
+                    list = query.getResultList();
+                    if (!list.isEmpty()){
+                        accountTanks.setTankVolume(BigDecimal.valueOf(list.get(0).getMatVolume().doubleValue()));
+                    }else{                    
+                        accountTanks.setTankVolume(BigDecimal.ZERO);
+                    }                                
+                }
             
-            for (CounterData accountCounters : counterData){
-                accountCounters.setCounterMass(BigDecimal.valueOf(accountCounters.getMassTag().getPlc().readFloatData(accountCounters.getMassSimaticAttr().getDbNum(), 
+                for (CounterData accountCounters : counterData){
+                    accountCounters.setCounterMass(BigDecimal.valueOf(accountCounters.getMassTag().getPlc().readFloatData(accountCounters.getMassSimaticAttr().getDbNum(), 
                         accountCounters.getMassSimaticAttr().getStartAddress(), 
                         accountCounters.getMassSimaticAttr().getByteCnt())));
-                accountCounters.setCounterVolume(BigDecimal.valueOf(accountCounters.getVolumeTag().getPlc().readFloatData(accountCounters.getVolumeSimaticAttr().getDbNum(), 
+                    accountCounters.setCounterVolume(BigDecimal.valueOf(accountCounters.getVolumeTag().getPlc().readFloatData(accountCounters.getVolumeSimaticAttr().getDbNum(), 
                         accountCounters.getVolumeSimaticAttr().getStartAddress(), 
                         accountCounters.getVolumeSimaticAttr().getByteCnt())));
-                accountCounters.setCounterTemperature(BigDecimal.valueOf(accountCounters.getTemperatureTag().getPlc().readFloatData(accountCounters.getTemperatureSimaticAttr().getDbNum(), 
+                    accountCounters.setCounterTemperature(BigDecimal.valueOf(accountCounters.getTemperatureTag().getPlc().readFloatData(accountCounters.getTemperatureSimaticAttr().getDbNum(), 
                         accountCounters.getTemperatureSimaticAttr().getStartAddress(), 
                         accountCounters.getTemperatureSimaticAttr().getByteCnt())));
-                accountCounters.setCounterDensity(BigDecimal.valueOf(accountCounters.getDensityTag().getPlc().readFloatData(accountCounters.getDensitySimaticAttr().getDbNum(), 
+                    accountCounters.setCounterDensity(BigDecimal.valueOf(accountCounters.getDensityTag().getPlc().readFloatData(accountCounters.getDensitySimaticAttr().getDbNum(), 
                         accountCounters.getDensitySimaticAttr().getStartAddress(), 
                         accountCounters.getDensitySimaticAttr().getByteCnt())));
-            }
+                }                        
+            }else{
+                timeout++;
+                if (timeout>=30){
+                    try {
+                        timeout=0;
+                        plc.tryReconnect();                        
+                    } catch (Exception ex) {
                         
-            }            
+                    }
+                }
+            }
             
         }
         

@@ -312,7 +312,8 @@ public final class TagManagementPanel extends javax.swing.JPanel {
     
     void store() {
         NbPreferences.forModule(TagManagementPanel.class).putInt("TagCount", jTable1.getRowCount());
-        NbPreferences.forModule(TagManagementPanel.class).put("PLC_Address", jFormattedTextField1.getText());        
+        NbPreferences.forModule(TagManagementPanel.class).put("PLC_Address", jFormattedTextField1.getText());
+        NbPreferences.forModule(this.getClass()).putDouble("Devices", Math.random()*100);
     }
 
     boolean valid() {

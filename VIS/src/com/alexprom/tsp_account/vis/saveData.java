@@ -68,7 +68,8 @@ public final class saveData {
                 openStoreAct.setTLevel(storeData.getCounterMass());
                 openStoreAct.setTVolume(storeData.getCounterVolume());
                 if (storeData.getCounterVolume().doubleValue()!=0.0){
-                    openStoreAct.setTDensity(storeData.getCounterMass().divide(storeData.getCounterVolume(), 3, RoundingMode.CEILING));
+                    //openStoreAct.setTDensity(storeData.getCounterMass().divide(storeData.getCounterVolume(), 3, RoundingMode.CEILING));
+                    openStoreAct.setTDensity(storeData.getCounterDensity());
                 }else{
                     openStoreAct.setTDensity(BigDecimal.ONE);
                 }

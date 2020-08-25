@@ -8,14 +8,13 @@ package com.alexprom.tsp_account.vis;
 import com.alexprom.connection.settings.dbConnectionSettingsPanel;
 import com.alexprom.tsp_account.daq.CustomRenderer;
 import com.alexprom.tsp_account.daq.CounterData;
-import com.alexprom.tsp_account.daq.DAQ_Thread;
 import com.alexprom.tsp_account.daq.DataLoggerTopComponent;
 import com.alexprom.tsp_account.daq.TagManagementPanel;
 import com.alexprom.tsp_account.daq.sensorSettingsPanel;
 import com.alexprom.tsp_account.report_db.CountersInitData;
 import com.alexprom.tsp_account.report_db.GlobalEntityManager;
 import com.alexprom.tsp_account.report_db.TSPReport;
-import java.awt.Font;
+import java.awt.Dimension;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +25,7 @@ import java.util.prefs.Preferences;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.swing.table.TableColumn;
-import org.jfree.chart.JFreeChart;
+import org.jfree.chart.ChartPanel;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -61,12 +60,14 @@ public class counterVisData extends TopComponent implements Runnable {
     private CountersInitData counterInitData;
     
     private EntityManager em;
-    private DAQ_Thread daqThread;
+    //private DAQ_Thread daqThread;
     private CounterData[] data;
-    private int dataIndex;
+    private int dataIndex=-1;
     private Thread formThread;   
-    private JFreeChart chart;
+    private final tankPanelChart chart;
+    private final ChartPanel panel;
     DataLoggerTopComponent tc; 
+    private boolean devicesChanged=false;
     /**
      * Creates new form counterVisData
      */
@@ -78,7 +79,13 @@ public class counterVisData extends TopComponent implements Runnable {
         putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_KEEP_PREFERRED_SIZE_WHEN_SLIDED_IN, Boolean.TRUE);
-        this.setFont(new Font("Tahoma", 1, 11));
+        chart = new tankPanelChart("", "Масса, кг", "");
+        Dimension dim = new Dimension();
+        dim.setSize(400, 250);
+        panel = new ChartPanel(chart.getChart());        
+        panel.setPreferredSize(dim);
+        jPanel3.add(panel);
+        tc = (DataLoggerTopComponent)WindowManager.getDefault().findTopComponent("DataLoggerTopComponent");
     }
 
     /**
@@ -310,7 +317,7 @@ public class counterVisData extends TopComponent implements Runnable {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -331,8 +338,8 @@ public class counterVisData extends TopComponent implements Runnable {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -380,31 +387,20 @@ public class counterVisData extends TopComponent implements Runnable {
         pref.addPreferenceChangeListener(new PreferenceChangeListener() {
         @Override
         public void preferenceChange(PreferenceChangeEvent evt) {                        
-            updatePersistence();
-            getTask();
+            updatePersistence();            
         }
-        });        
-        
-        Preferences tagsMgmt = NbPreferences.forModule(TagManagementPanel.class);
-        tagsMgmt.addPreferenceChangeListener(new PreferenceChangeListener(){
-            @Override
-            public void preferenceChange(PreferenceChangeEvent evt) {
-                getTask();
-            }                
-        });
-        Preferences tankPref = NbPreferences.forModule(sensorSettingsPanel.class);
-        tankPref.addPreferenceChangeListener(new PreferenceChangeListener() {
-            @Override
-            public void preferenceChange(PreferenceChangeEvent evt) {
-                close();
-            }
-        });
+        });                        
         
         updatePersistence();
         getTask();
-        formThread = new Thread(this);
-        formThread.setPriority(Thread.MIN_PRIORITY);
-        formThread.start();
+        
+        if (dataIndex==-1){
+            close();
+        }else{        
+            formThread = new Thread(this);
+            formThread.setPriority(Thread.MIN_PRIORITY);
+            formThread.start();
+        }
     }
     
     public void updatePersistence(){                        
@@ -426,89 +422,108 @@ public class counterVisData extends TopComponent implements Runnable {
     }
     
     private void getTask(){
-        tc = (DataLoggerTopComponent)WindowManager.getDefault().findTopComponent("DataLoggerTopComponent");
+        
         data = tc.getCounterData();
         dataIndex=-1;
-        for (int i=0; i<data.length; i++){            
-            if (data[i].getCounterId()==counterInitData.getCounterId()) dataIndex=i;
+        if ((counterInitData!=null) || (data!=null)){            
+            for (int i=0; i<data.length; i++){            
+                if (data[i].getCounterId()==counterInitData.getCounterId()) dataIndex=i;
             }
-        if (dataIndex==-1) close();
+        }
     }
     
     private void updateVis(){
         data = tc.getCounterData();
-        lbCurrentMass.setText(String.format("%.1f", data[dataIndex].getCounterMass()));
-        lbCurrentVolume.setText(String.format("%.1f", data[dataIndex].getCounterVolume()));
-        lbCurrentDensity.setText(String.format("%.4f", data[dataIndex].getCounterDensity()));
-        lbCurrentTemperature.setText(String.format("%.1f", data[dataIndex].getCounterTemperature()));
+        if (data!=null){
+                            
+                lbCurrentMass.setText(String.format("%.1f", data[dataIndex].getCounterMass()));
+                lbCurrentVolume.setText(String.format("%.1f", data[dataIndex].getCounterVolume()));
+                lbCurrentDensity.setText(String.format("%.4f", data[dataIndex].getCounterDensity()));
+                lbCurrentTemperature.setText(String.format("%.1f", data[dataIndex].getCounterTemperature()));
         
-        Date currentDate = new Date();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Query query = em.createNamedQuery("TSPReport.findByDateTankID");
-        query.setParameter("tankID", data[dataIndex].getCounterId());
-        query.setParameter("daqDate", df.format(currentDate));
-        List<TSPReport> currentDay = query.getResultList();
-        int cnt = currentDay.size();
-        try{
-        if (cnt!=0){            
-            for (int i=0; i<cnt; i++){
-                tblCurrentDay.getModel().setValueAt(currentDay.get(i).getDaqTime(), i, 0);
-                tblCurrentDay.getModel().setValueAt(currentDay.get(i).getTLevel(), i, 1);
-                tblCurrentDay.getModel().setValueAt(currentDay.get(i).getTVolume(), i, 2);
-                tblCurrentDay.getModel().setValueAt(currentDay.get(i).getTTemper(), i, 3);
-                tblCurrentDay.getModel().setValueAt(currentDay.get(i).getTDensity(), i, 4);
-            }
-            int c = tblCurrentDay.getColumnCount();
-            for (int i=0; i<c; i++){
-                TableColumn col = tblCurrentDay.getColumnModel().getColumn(i);                            
-                col.setCellRenderer(new CustomRenderer());
-            }
-        }
-        query = em.createNamedQuery("TSPReport.findByTankID");
-        query.setParameter("tankID", data[dataIndex].getCounterId());
-        List<TSPReport> lastWeek = query.getResultList();
-        int cntWeek = lastWeek.size();
-        if (cntWeek!=0){
-            if (cntWeek>=14){
-                for (int j=cntWeek-14; j<cntWeek; j++){
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqDate(), j-cntWeek+14, 0);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqTime(), j-cntWeek+14, 1);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTLevel(), j-cntWeek+14, 2);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTVolume(), j-cntWeek+14, 3);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTTemper(), j-cntWeek+14, 4);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTDensity(), j-cntWeek+14, 5);
-                }
-            }else{
-                for (int j=0; j<cntWeek; j++){
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqDate(), j, 0);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqTime(), j, 1);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTLevel(), j, 2);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTVolume(), j, 3);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTTemper(), j, 4);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTDensity(), j, 5);
-                }
-            }
-            int c = tblLastWeek.getColumnCount();
-            for (int i=0; i<c; i++){
-                TableColumn col = tblLastWeek.getColumnModel().getColumn(i);                            
-                col.setCellRenderer(new CustomRenderer());
-            }
-        }
-        }catch (java.lang.ArrayIndexOutOfBoundsException ex){
+                Date currentDate = new Date();
+                float[] newData = new float[1];
+                newData[0] = data[dataIndex].getCounterMass().floatValue();
+                chart.getRange().setRange(data[dataIndex].getMassTag().getMinValue(), data[dataIndex].getMassTag().getMaxValue());
+                chart.getDataset().advanceTime();
+                chart.getDataset().appendData(newData);
+                chart.getChart().fireChartChanged();
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Query query = em.createNamedQuery("TSPReport.findByDateTankID");
+                query.setParameter("tankID", data[dataIndex].getCounterId());
+                query.setParameter("daqDate", df.format(currentDate));
+                List<TSPReport> currentDay = query.getResultList();
+                int cnt = currentDay.size();
+                try{
+                    if (cnt!=0){            
+                        for (int i=0; i<cnt; i++){
+                            tblCurrentDay.getModel().setValueAt(currentDay.get(i).getDaqTime(), i, 0);
+                            tblCurrentDay.getModel().setValueAt(String.format("%.1f", currentDay.get(i).getTLevel()), i, 1);
+                            tblCurrentDay.getModel().setValueAt(String.format("%.1f", currentDay.get(i).getTVolume()), i, 2);
+                            tblCurrentDay.getModel().setValueAt(String.format("%.1f", currentDay.get(i).getTTemper()), i, 3);
+                            tblCurrentDay.getModel().setValueAt(String.format("%.4f", currentDay.get(i).getTDensity()), i, 4);
+                        }
+                        int c = tblCurrentDay.getColumnCount();
+                        for (int i=0; i<c; i++){
+                            TableColumn col = tblCurrentDay.getColumnModel().getColumn(i);                            
+                            col.setCellRenderer(new CustomRenderer());
+                        }
+                    }
+                    query = em.createNamedQuery("TSPReport.findByTankID");
+                    query.setParameter("tankID", data[dataIndex].getCounterId());
+                    List<TSPReport> lastWeek = query.getResultList();
+                    int cntWeek = lastWeek.size();
+                    if (cntWeek!=0){
+                        if (cntWeek>=14){
+                            for (int j=cntWeek-14; j<cntWeek; j++){
+                                tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqDate(), j-cntWeek+14, 0);
+                                tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqTime(), j-cntWeek+14, 1);
+                                tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTLevel()), j-cntWeek+14, 2);
+                                tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTVolume()), j-cntWeek+14, 3);
+                                tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTTemper()), j-cntWeek+14, 4);
+                                tblLastWeek.getModel().setValueAt(String.format("%.4f", lastWeek.get(j).getTDensity()), j-cntWeek+14, 5);
+                            }
+                        }else{
+                            for (int j=0; j<cntWeek; j++){
+                                tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqDate(), j, 0);
+                                tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqTime(), j, 1);
+                                tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTLevel()), j, 2);
+                                tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTVolume()), j, 3);
+                                tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTTemper()), j, 4);
+                                tblLastWeek.getModel().setValueAt(String.format("%.4f", lastWeek.get(j).getTDensity()), j, 5);
+                            }
+                        }
+                        int c = tblLastWeek.getColumnCount();
+                        for (int i=0; i<c; i++){
+                            TableColumn col = tblLastWeek.getColumnModel().getColumn(i);                            
+                            col.setCellRenderer(new CustomRenderer());
+                        }
+                    }
+                }catch (java.lang.ArrayIndexOutOfBoundsException ex){
             
-        }
-    }
+                }
+            }        
+    }        
     
     @Override
     public void run() {
-        while (true){
-            updateVis();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
+            while(true){            
+                /*synchronized(this){
+                    while (tc.devicesDAQ_Restarted){
+                        try {
+                            wait();
+                        } catch (InterruptedException ex) {
+                        
+                        }
+                    } 
+                    notify();*/
+                    updateVis();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                
+                    }
+                                
             }
-        }
     }
-
 }

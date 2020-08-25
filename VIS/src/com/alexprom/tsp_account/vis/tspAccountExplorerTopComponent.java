@@ -6,6 +6,7 @@
 package com.alexprom.tsp_account.vis;
 
 import com.alexprom.connection.settings.dbConnectionSettingsPanel;
+import com.alexprom.tsp_account.daq.TagManagementPanel;
 import com.alexprom.tsp_account.daq.sensorSettingsPanel;
 import com.alexprom.tsp_account.report_db.GlobalEntityManager;
 import java.awt.BorderLayout;
@@ -107,6 +108,13 @@ public final class tspAccountExplorerTopComponent extends TopComponent implement
             getDeviceTree();
         }
         });
+        Preferences tagsMgmt = NbPreferences.forModule(TagManagementPanel.class);
+        tagsMgmt.addPreferenceChangeListener(new PreferenceChangeListener(){
+            @Override
+            public void preferenceChange(PreferenceChangeEvent evt) {
+                getDeviceTree();
+            }                
+        }); 
         Preferences tankPref = NbPreferences.forModule(sensorSettingsPanel.class);
         tankPref.addPreferenceChangeListener(new PreferenceChangeListener() {
             @Override

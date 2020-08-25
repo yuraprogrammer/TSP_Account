@@ -7,16 +7,12 @@ package com.alexprom.tsp_account.vis;
 
 import com.alexprom.connection.settings.dbConnectionSettingsPanel;
 import com.alexprom.tsp_account.daq.CustomRenderer;
-import com.alexprom.tsp_account.daq.DAQ_Thread;
 import com.alexprom.tsp_account.daq.DataLoggerTopComponent;
-import com.alexprom.tsp_account.daq.TagManagementPanel;
 import com.alexprom.tsp_account.daq.TankData;
-import com.alexprom.tsp_account.daq.sensorSettingsPanel;
 import com.alexprom.tsp_account.report_db.GlobalEntityManager;
 import com.alexprom.tsp_account.report_db.TSPReport;
 import com.alexprom.tsp_account.report_db.TanksToAccount;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -69,9 +65,9 @@ import org.openide.windows.WindowManager;
 public class tankVisData extends TopComponent implements Runnable{
 
    private TanksToAccount tankInitData;
-   private DAQ_Thread daqThread;
+   //private DAQ_Thread daqThread;
    private TankData[] data;
-   private int dataIndex;
+   private int dataIndex=-1;
    private Thread formThread;   
    private final tankPanelChart chart;
    private XYDataset dataset;
@@ -79,6 +75,7 @@ public class tankVisData extends TopComponent implements Runnable{
    private BigDecimal newDensity32=BigDecimal.ZERO, newTemperature32=BigDecimal.ZERO;
    private DataLoggerTopComponent tc;
    private EntityManager em;
+   private boolean devicesChanged=false, changedOld, changedNew;
     /**
      * Creates new form tankVisData
      */
@@ -90,14 +87,13 @@ public class tankVisData extends TopComponent implements Runnable{
         putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_KEEP_PREFERRED_SIZE_WHEN_SLIDED_IN, Boolean.TRUE);
-        //chart = ChartFactory.createTimeSeriesChart(TOOL_TIP_TEXT_KEY, TOOL_TIP_TEXT_KEY, TOOL_TIP_TEXT_KEY, dataset, true, true, true)
-//        this.setFont(new Font("Tahoma", 1, 11));
-        chart = new tankPanelChart("", "", "");
-        panel = new ChartPanel(chart.getChart());
-        Dimension dimension = new Dimension();
-        dimension.setSize(400, 280);
-        panel.setPreferredSize(dimension);
+        chart = new tankPanelChart("", "Взлив, мм", "");
+        Dimension dim = new Dimension();
+        dim.setSize(400, 250);
+        panel = new ChartPanel(chart.getChart());        
+        panel.setPreferredSize(dim);
         jPanel3.add(panel);
+        tc = (DataLoggerTopComponent)WindowManager.getDefault().findTopComponent("DataLoggerTopComponent");
     }
 
     /**
@@ -463,31 +459,19 @@ public class tankVisData extends TopComponent implements Runnable{
         pref.addPreferenceChangeListener(new PreferenceChangeListener() {
         @Override
         public void preferenceChange(PreferenceChangeEvent evt) {                        
-            updatePersistence();
-            getTask();
+            updatePersistence();        
         }
         });        
-        
-        Preferences tagsMgmt = NbPreferences.forModule(TagManagementPanel.class);
-        tagsMgmt.addPreferenceChangeListener(new PreferenceChangeListener(){
-            @Override
-            public void preferenceChange(PreferenceChangeEvent evt) {
-                getTask();
-            }                
-        });
-        Preferences tankPref = NbPreferences.forModule(sensorSettingsPanel.class);
-        tankPref.addPreferenceChangeListener(new PreferenceChangeListener() {
-            @Override
-            public void preferenceChange(PreferenceChangeEvent evt) {
-                close();
-            }
-        });
-        
+                                
         updatePersistence();
         getTask();
-        formThread = new Thread(this);
-        formThread.setPriority(Thread.MIN_PRIORITY);
-        formThread.start();
+        if (dataIndex==-1){
+            close();
+        }else{
+            formThread = new Thread(this);
+            formThread.setPriority(Thread.MIN_PRIORITY);
+            formThread.start();
+        }
     }
     
     public void updatePersistence(){                        
@@ -508,15 +492,17 @@ public class tankVisData extends TopComponent implements Runnable{
         return tankInitData;
     }
     
-    private void getTask(){
-        tc = (DataLoggerTopComponent)WindowManager.getDefault().findTopComponent("DataLoggerTopComponent");        
+    private void getTask(){        
         data = tc.getTankData();
         dataIndex=-1;
-        for (int i=0; i<data.length; i++){            
-            if (data[i].getTankId()==tankInitData.getTankId()) dataIndex=i;
+        if ((tankInitData==null) || (data==null)){ 
+            close();
+        }else{
+            for (int i=0; i<data.length; i++){            
+                if (data[i].getTankId()==tankInitData.getTankId()) dataIndex=i;
+            }        
+            checkEdition();        
         }
-        if (dataIndex==-1) close();
-        checkEdition();        
     }
     
     private void checkEdition(){
@@ -617,97 +603,120 @@ public class tankVisData extends TopComponent implements Runnable{
         Object res = DialogDisplayer.getDefault().notify(nd);
     }
     
-    private void updateVis(){
-        data = tc.getTankData();
-        lbMaxLevel.setText(String.format("%.1f", data[dataIndex].getLevelTag().getMaxValue()));
-        lbMinLevel.setText(String.format("%.1f", data[dataIndex].getLevelTag().getMinValue()));
-        lbCurrentLevel.setText(String.format("%.1f", data[dataIndex].getTankLevel()));
-        lbCurrentVolume.setText(String.format("%.1f", data[dataIndex].getTabkVolume()));
+    private void updateVis(){        
         
-        if (data[dataIndex].getTankId()!=47){
-            lbCurrentDensity.setText(String.format("%.4f", data[dataIndex].getTankDensity()));
-            lbCurrentTemperature.setText(String.format("%.1f", data[dataIndex].getTankTemperature()));
-        }
-        float fillLevel = data[dataIndex].getTankLevel().floatValue()/
+        data = tc.getTankData();
+        if (data!=null){
+            lbMaxLevel.setText(String.format("%.1f", data[dataIndex].getLevelTag().getMaxValue()));
+            lbMinLevel.setText(String.format("%.1f", data[dataIndex].getLevelTag().getMinValue()));
+            lbCurrentLevel.setText(String.format("%.1f", data[dataIndex].getTankLevel()));
+            lbCurrentVolume.setText(String.format("%.1f", data[dataIndex].getTabkVolume()));
+        
+            if (data[dataIndex].getTankId()!=47){
+                lbCurrentDensity.setText(String.format("%.4f", data[dataIndex].getTankDensity()));
+                lbCurrentTemperature.setText(String.format("%.1f", data[dataIndex].getTankTemperature()));
+            }
+            float fillLevel = data[dataIndex].getTankLevel().floatValue()/
                 ((float)data[dataIndex].getLevelTag().getMaxValue()-(float)data[dataIndex].getLevelTag().getMinValue())*100;
-        lbFilling.setValue(Math.round(fillLevel));
-        Date currentDate = new Date();
-        float[] newData = new float[1];
-        newData[0] = data[dataIndex].getTankLevel().floatValue();
-        chart.getRange().setRange(data[dataIndex].getLevelTag().getMinValue(), data[dataIndex].getLevelTag().getMaxValue());
-        chart.getDataset().advanceTime();
-        chart.getDataset().appendData(newData);
-        chart.getChart().fireChartChanged();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Query query = em.createNamedQuery("TSPReport.findByDateTankID");
-        query.setParameter("tankID", data[dataIndex].getTankId());
-        query.setParameter("daqDate", df.format(currentDate));
-        List<TSPReport> currentDay = query.getResultList();
-        int cnt = currentDay.size();
-        try{
-        if (cnt!=0){            
-            DefaultTableModel tanksModel = new DefaultTableModel();
-            tanksModel.setColumnIdentifiers(new String[]{"Время", "Взлив, мм", "Объем, л", "t, °C", "р, кг/л"});
-            int i=0;
-            for (TSPReport currentTankData : currentDay){                
-                tblCurrentDay.getModel().setValueAt(currentTankData.getDaqTime(), i, 0);
-                tblCurrentDay.getModel().setValueAt(currentTankData.getTLevel(), i, 1);
-                tblCurrentDay.getModel().setValueAt(currentTankData.getTVolume(), i, 2);
-                tblCurrentDay.getModel().setValueAt(currentTankData.getTTemper(), i, 3);
-                tblCurrentDay.getModel().setValueAt(currentTankData.getTDensity(), i, 4);
-                i++;
-            }
-            int c = tblCurrentDay.getColumnModel().getColumnCount();
-            for (int j=0; j<c; j++){
-                TableColumn col = tblCurrentDay.getColumnModel().getColumn(j);
-                col.setCellRenderer(new CustomRenderer());
-            }
-        }
-        query = em.createNamedQuery("TSPReport.findByTankID");
-        query.setParameter("tankID", data[dataIndex].getTankId());
-        List<TSPReport> lastWeek = query.getResultList();
-        int cntWeek = lastWeek.size();
-        if (cntWeek!=0){
-            if (cntWeek>=14){
-                for (int j=cntWeek-14; j<cntWeek; j++){
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqDate(), j-cntWeek+14, 0);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqTime(), j-cntWeek+14, 1);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTLevel(), j-cntWeek+14, 2);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTVolume(), j-cntWeek+14, 3);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTTemper(), j-cntWeek+14, 4);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTDensity(), j-cntWeek+14, 5);                    
+            lbFilling.setValue(Math.round(fillLevel));
+            Date currentDate = new Date();
+            float[] newData = new float[1];
+            newData[0] = data[dataIndex].getTankLevel().floatValue();
+            chart.getRange().setRange(data[dataIndex].getLevelTag().getMinValue(), data[dataIndex].getLevelTag().getMaxValue());
+            chart.getDataset().advanceTime();
+            chart.getDataset().appendData(newData);
+            chart.getChart().fireChartChanged();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Query query = em.createNamedQuery("TSPReport.findByDateTankID");
+            query.setParameter("tankID", data[dataIndex].getTankId());
+            query.setParameter("daqDate", df.format(currentDate));
+            List<TSPReport> currentDay = query.getResultList();
+            int cnt = currentDay.size();
+            try{
+                if (cnt!=0){            
+                    DefaultTableModel tanksModel = new DefaultTableModel();
+                    tanksModel.setColumnIdentifiers(new String[]{"Время", "Взлив, мм", "Объем, л", "t, °C", "р, кг/л"});
+                    int i=0;
+                    for (TSPReport currentTankData : currentDay){                
+                        tblCurrentDay.getModel().setValueAt(currentTankData.getDaqTime(), i, 0);
+                        tblCurrentDay.getModel().setValueAt(String.format("%.1f", currentTankData.getTLevel()), i, 1);
+                        tblCurrentDay.getModel().setValueAt(String.format("%.1f", currentTankData.getTVolume()), i, 2);
+                        tblCurrentDay.getModel().setValueAt(String.format("%.1f",currentTankData.getTTemper()), i, 3);
+                        tblCurrentDay.getModel().setValueAt(String.format("%.4f", currentTankData.getTDensity()), i, 4);
+                        i++;
+                    }
+                    int c = tblCurrentDay.getColumnModel().getColumnCount();
+                    for (int j=0; j<c; j++){
+                        TableColumn col = tblCurrentDay.getColumnModel().getColumn(j);
+                        col.setCellRenderer(new CustomRenderer());
+                    }
                 }
-            }else{
-                for (int j=0; j<cntWeek; j++){
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqDate(), j, 0);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqTime(), j, 1);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTLevel(), j, 2);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTVolume(), j, 3);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTTemper(), j, 4);
-                    tblLastWeek.getModel().setValueAt(lastWeek.get(j).getTDensity(), j, 5);
+                query = em.createNamedQuery("TSPReport.findByTankID");
+                query.setParameter("tankID", data[dataIndex].getTankId());
+                List<TSPReport> lastWeek = query.getResultList();
+                int cntWeek = lastWeek.size();
+                if (cntWeek!=0){
+                    if (cntWeek>=14){
+                        for (int j=cntWeek-14; j<cntWeek; j++){
+                            tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqDate(), j-cntWeek+14, 0);
+                            tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqTime(), j-cntWeek+14, 1);
+                            tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTLevel()), j-cntWeek+14, 2);
+                            tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTVolume()), j-cntWeek+14, 3);
+                            tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTTemper()), j-cntWeek+14, 4);
+                            tblLastWeek.getModel().setValueAt(String.format("%.4f", lastWeek.get(j).getTDensity()), j-cntWeek+14, 5);                    
+                        }
+                    }else{
+                        for (int j=0; j<cntWeek; j++){
+                            tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqDate(), j, 0);
+                            tblLastWeek.getModel().setValueAt(lastWeek.get(j).getDaqTime(), j, 1);
+                            tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTLevel()), j, 2);
+                            tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTVolume()), j, 3);
+                            tblLastWeek.getModel().setValueAt(String.format("%.1f", lastWeek.get(j).getTTemper()), j, 4);
+                            tblLastWeek.getModel().setValueAt(String.format("%.4f", lastWeek.get(j).getTDensity()), j, 5);
+                        }
+                    }            
+                    int c = tblLastWeek.getColumnModel().getColumnCount();
+                    for (int i=0; i<c; i++){
+                        TableColumn col = tblLastWeek.getColumnModel().getColumn(i);                            
+                        col.setCellRenderer(new CustomRenderer());
+                    }
                 }
-            }
+            }catch (java.lang.ArrayIndexOutOfBoundsException ex){
             
-            int c = tblLastWeek.getColumnModel().getColumnCount();
-            for (int i=0; i<c; i++){
-                TableColumn col = tblLastWeek.getColumnModel().getColumn(i);                            
-                col.setCellRenderer(new CustomRenderer());
             }
-        }
-        }catch (java.lang.ArrayIndexOutOfBoundsException ex){
-            
-        }
+        }        
+    }
+           
+    synchronized void resumeUpdateVis(){
+        
+        getTask();
+        notify();        
     }
     
     @Override
     public void run() {
-        while (true){
+        while (true){            
+            devicesChanged=tc.devicesDAQ_Restarted;
+            changedNew=devicesChanged;
+            synchronized(this){
+                while (devicesChanged){
+                    try {
+                        wait();
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            System.out.println("Tanks restarted");
+            resumeUpdateVis();
             updateVis();
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
+                
             }
+            }
+            
+            changedOld=changedNew;
         }
     }
 

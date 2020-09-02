@@ -54,12 +54,12 @@ public final class closeStore implements ActionListener {
         return exists;
     }        
     
-    private boolean checkTime(EntityManager em){
+    private boolean checkTime(EntityManager em, String today){
         boolean checked=false;
         Date createDate = new Date();
         DateFormat tf = new SimpleDateFormat("hh:mm");
         String timeString = tf.format(createDate);
-        Query query = em.createQuery("select t from TSPReport t where t.daqTime like '"+timeString+"%'");
+        Query query = em.createQuery("select t from TSPReport t where t.daqDate like '"+today+"%' and t.daqTime like '"+timeString+"%'");
         List<TSPReport> list = query.getResultList();
         if (list.isEmpty()){checked=true;}
         return checked;
@@ -77,25 +77,25 @@ public final class closeStore implements ActionListener {
             NotifyDescriptor notFinished = new NotifyDescriptor.Message("На сегодняшний день склад уже закрыт!!!", NotifyDescriptor.WARNING_MESSAGE);
             Object resultNotFinished = DialogDisplayer.getDefault().notify(notFinished);
         }else{
-            if (checkTime(em)){
+            if (checkTime(em, createString)){
                 NotifyDescriptor create = new NotifyDescriptor.Confirmation("На сегодняшний день склад не закрыт!!! Закрыть склад?", "ТСП");
                 Object createResult = DialogDisplayer.getDefault().notify(create);
                 if (createResult==NotifyDescriptor.YES_OPTION){
-                    saveData newData = new saveData(emf, em);
-                    if (newData.saved){
+                    //saveData newData = new saveData(emf, em);
+                    //if (newData.saved){
                         NotifyDescriptor done = new NotifyDescriptor.Confirmation("Данные о состоянии ТСП на момент закрытия склада успешно сохранены!!!");
                         Object resultDone = DialogDisplayer.getDefault().notify(done);
-                        try {
-                            createXML xmlReport;                            
-                            xmlReport = new createXML(em, createDate);
-                        } catch (TransformerException ex) {
-                            NotifyDescriptor xmlDone = new NotifyDescriptor.Confirmation(ex.getMessageAndLocation());
-                            Object resultXML = DialogDisplayer.getDefault().notify(xmlDone);                            
-                        }
-                    } else {
-                        NotifyDescriptor notSaved = new NotifyDescriptor.Message("Данные о состоянии ТСП на момент закрытия склада не сохранены!!!", NotifyDescriptor.WARNING_MESSAGE);
-                        Object resultNotSaved = DialogDisplayer.getDefault().notify(notSaved);
-                    }
+                    //    try {
+                    //        createXML xmlReport;                            
+                    //        xmlReport = new createXML(em, createDate);
+                    //    } catch (TransformerException ex) {
+                    //        NotifyDescriptor xmlDone = new NotifyDescriptor.Confirmation(ex.getMessageAndLocation());
+                    //        Object resultXML = DialogDisplayer.getDefault().notify(xmlDone);                            
+                    //    }
+                    //} else {
+                    //    NotifyDescriptor notSaved = new NotifyDescriptor.Message("Данные о состоянии ТСП на момент закрытия склада не сохранены!!!", NotifyDescriptor.WARNING_MESSAGE);
+                    //    Object resultNotSaved = DialogDisplayer.getDefault().notify(notSaved);
+                    //}
                 }
             }else{
                 NotifyDescriptor errorTime = new NotifyDescriptor.Message("Время закрытия и открытия склада не должно совпадать! Данные не сохранены!", NotifyDescriptor.WARNING_MESSAGE);

@@ -81,21 +81,21 @@ public final class closeStore implements ActionListener {
                 NotifyDescriptor create = new NotifyDescriptor.Confirmation("На сегодняшний день склад не закрыт!!! Закрыть склад?", "ТСП");
                 Object createResult = DialogDisplayer.getDefault().notify(create);
                 if (createResult==NotifyDescriptor.YES_OPTION){
-                    //saveData newData = new saveData(emf, em);
-                    //if (newData.saved){
+                    saveData newData = new saveData(emf, em);
+                    if (newData.saved){
                         NotifyDescriptor done = new NotifyDescriptor.Confirmation("Данные о состоянии ТСП на момент закрытия склада успешно сохранены!!!");
                         Object resultDone = DialogDisplayer.getDefault().notify(done);
-                    //    try {
-                    //        createXML xmlReport;                            
-                    //        xmlReport = new createXML(em, createDate);
-                    //    } catch (TransformerException ex) {
-                    //        NotifyDescriptor xmlDone = new NotifyDescriptor.Confirmation(ex.getMessageAndLocation());
-                    //        Object resultXML = DialogDisplayer.getDefault().notify(xmlDone);                            
-                    //    }
-                    //} else {
-                    //    NotifyDescriptor notSaved = new NotifyDescriptor.Message("Данные о состоянии ТСП на момент закрытия склада не сохранены!!!", NotifyDescriptor.WARNING_MESSAGE);
-                    //    Object resultNotSaved = DialogDisplayer.getDefault().notify(notSaved);
-                    //}
+                        try {
+                            createXML xmlReport;                            
+                            xmlReport = new createXML(em, createDate);
+                        } catch (TransformerException ex) {
+                            NotifyDescriptor xmlDone = new NotifyDescriptor.Confirmation(ex.getMessageAndLocation());
+                            Object resultXML = DialogDisplayer.getDefault().notify(xmlDone);                            
+                        }
+                    } else {
+                        NotifyDescriptor notSaved = new NotifyDescriptor.Message("Данные о состоянии ТСП на момент закрытия склада не сохранены!!!", NotifyDescriptor.WARNING_MESSAGE);
+                        Object resultNotSaved = DialogDisplayer.getDefault().notify(notSaved);
+                    }
                 }
             }else{
                 NotifyDescriptor errorTime = new NotifyDescriptor.Message("Время закрытия и открытия склада не должно совпадать! Данные не сохранены!", NotifyDescriptor.WARNING_MESSAGE);

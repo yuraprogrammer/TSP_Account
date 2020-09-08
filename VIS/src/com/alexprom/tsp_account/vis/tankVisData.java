@@ -700,20 +700,15 @@ public class tankVisData extends TopComponent implements Runnable{
             changedNew=devicesChanged;
             synchronized(this){
                 while (devicesChanged){
-                    try {
-                        wait();
-                    } catch (InterruptedException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            System.out.println("Tanks restarted");
-            resumeUpdateVis();
+                    System.out.println("Tanks restarted");
+                    resumeUpdateVis();
+                }                
+            }            
             updateVis();
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
-                
-            }
+                            
             }
             
             changedOld=changedNew;

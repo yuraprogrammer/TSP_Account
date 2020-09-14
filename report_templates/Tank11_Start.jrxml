@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Tank11_Start" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Key" uuid="c331d14f-1793-44dc-bf1d-33f09dc0bb71">
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Tank11_Start" pageWidth="554" pageHeight="20" whenNoDataType="AllSectionsNoDetail" columnWidth="554" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Key" uuid="c331d14f-1793-44dc-bf1d-33f09dc0bb71">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TSP"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
@@ -8,17 +9,11 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="actDate" class="java.lang.String"/>
 	<parameter name="actTime" class="java.lang.String"/>
-	<parameter name="tankId" class="java.lang.String"/>
+	<parameter name="tankId" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT * FROM TSP_Report t where  t.daq_date = $P{actDate} 
-and t.daq_time =  $P{actTime} and  t.tankID = $P{tankId}]]>
+		<![CDATA[SELECT * FROM v_Report t where  t.daq_date = $P{actDate} 
+and t.daq_time =  $P{actTime} and t.tankID =  $P{tankId} ]]>
 	</queryString>
-	<field name="id" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.label" value="id"/>
-	</field>
-	<field name="tankID" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="tankID"/>
-	</field>
 	<field name="daq_date" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="daq_date"/>
 	</field>
@@ -37,34 +32,43 @@ and t.daq_time =  $P{actTime} and  t.tankID = $P{tankId}]]>
 	<field name="t_volume" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.label" value="t_volume"/>
 	</field>
+	<field name="tankID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="tankID"/>
+	</field>
+	<field name="Tank_Name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Tank_Name"/>
+	</field>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="5" splitType="Stretch">
+		<band height="20">
 			<textField>
-				<reportElement x="-20" y="-20" width="167" height="20" uuid="792c4c23-d649-4786-9985-0f6585e08e5b"/>
+				<reportElement x="0" y="0" width="108" height="20" uuid="1923b32f-25f6-4299-87b1-ddcff0e27978"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{t_temper}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="149" y="-20" width="167" height="20" uuid="a439e6f1-8762-4446-9c25-cb8a8c3c4812"/>
+				<reportElement x="114" y="0" width="108" height="20" uuid="1b72f281-9a13-4a60-8f17-75e345faa413"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{t_density}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="318" y="-20" width="167" height="20" uuid="5c005f91-a833-4b67-9fbe-eee901e5be05"/>
+				<reportElement x="223" y="0" width="116" height="20" uuid="d2a329e1-8d59-429f-9cd0-cdec1a8fde25"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{t_volume}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="487" y="-20" width="172" height="20" uuid="58a4f277-ecbe-49c4-a0d2-96e4aacd1609"/>
+				<reportElement x="342" y="0" width="136" height="20" uuid="3d74e2a2-894f-4fc7-aeee-b963a56c65f8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>

@@ -506,7 +506,7 @@ public class tankVisData extends TopComponent implements Runnable{
     }
     
     private void checkEdition(){
-        if (data[dataIndex].getTankId()==47){
+        if ((data[dataIndex].getTankId()==47) || (data[dataIndex].getTankId()==55) || (data[dataIndex].getTankId()==48)){
             lbCurrentDensity.setEditable(true);
             lbCurrentTemperature.setEditable(true);
             lbCurrentDensity.setText(String.format("%.4f", data[dataIndex].getTankDensity()));
@@ -612,7 +612,7 @@ public class tankVisData extends TopComponent implements Runnable{
             lbCurrentLevel.setText(String.format("%.1f", data[dataIndex].getTankLevel()));
             lbCurrentVolume.setText(String.format("%.1f", data[dataIndex].getTabkVolume()));
         
-            if (data[dataIndex].getTankId()!=47){
+            if ((data[dataIndex].getTankId()!=47) && (data[dataIndex].getTankId()!=48) && (data[dataIndex].getTankId()!=55)){
                 lbCurrentDensity.setText(String.format("%.4f", data[dataIndex].getTankDensity()));
                 lbCurrentTemperature.setText(String.format("%.1f", data[dataIndex].getTankTemperature()));
             }

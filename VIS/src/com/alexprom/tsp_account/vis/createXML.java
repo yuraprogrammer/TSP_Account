@@ -120,7 +120,7 @@ public class createXML {
             docElement.appendChild(createDocumentRow(doc, "0", "1", "RECNO", "0"));                        
             
             //Данные из базы
-            Query q_tanks = em.createNamedQuery("TanksToAccount.findAll");
+            Query q_tanks = em.createNamedQuery("TanksToAccount.findAll");            
             List<TanksToAccount> tanks = q_tanks.getResultList();
             Query q_counters = em.createNamedQuery("CountersInitData.findAll");
             List<CountersInitData> counters = q_counters.getResultList();
@@ -143,87 +143,89 @@ public class createXML {
                 
                 //docElement.appendChild(createDocumentRow(doc, "0", "1", "TAB1_A2", "2909199020"));//Код топлива
                 //docElement.appendChild(createDocumentRow(doc, "0", "1", "TAB1_A3", "Інші ефіри прості, ефіроспирти, ефірофеноли, ефіроспиртофеноли, пероксиди спиртів, пероксиди простих ефірів, пероксиди кетонів (визначеного або невизначеного хімічного складу) та їх галогеновані, сульфовані, нітровані або нітрозовані похідні, крім ди"));
-                Query tankName = em.createNamedQuery("TankDic.findByTankId");
-                tankName.setParameter("tankId", tankId[i]);
-                List<TankDic> tankList = tankName.getResultList();
-                //Получение наименования резервуара
-                for (int s=0; s<tankList.size(); s++){
-                    if (tankId[i]<100){
-                        docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A5", "Р"+tankList.get(s).getTankName()));//Емкость
-                        docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A6", sensorSerial[i]));//Серийный номер уровнемера
-                    }
-                }                
-                //Выборка данных для каждого резервуара
-                Query query = em.createNamedQuery("TSPReport.findByDateTankID");
-                query.setParameter("daqDate", dfDate.format(reportDate));
-                query.setParameter("tankID", tankId[i]);
-                List<TSPReport> list = query.getResultList(); 
-                if (list.isEmpty()){
-                    if (tankId[i]<100){
-                        docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A7", "0.00"));//Объем при +15
-                        docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A8", "0.00"));//Объем при +15
-                        docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A", String.valueOf(i+1)));//№ п/п
-                    }else{
-                        docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "RECNO", String.valueOf(j)));
-                        docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A3", "Паливо моторне альтернативне"));
-                        docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A4", sensorSerial[i]));
-                        docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A5", "0.00"));
-                        docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A", String.valueOf(j+1)));                                                                                            
-                        j++;
-                    }
-                }else{   
-                    for (int z=0; z<list.size(); z++){
+                if ((tankId[i]!=47) && (tankId[i]!=48) && (tankId[i]!=55)){
+                    Query tankName = em.createNamedQuery("TankDic.findByTankId");
+                    tankName.setParameter("tankId", tankId[i]);
+                    List<TankDic> tankList = tankName.getResultList();
+                    //Получение наименования резервуара
+                    for (int s=0; s<tankList.size(); s++){
+                        if (tankId[i]<100){
+                            docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A5", "Р"+tankList.get(s).getTankName()));//Емкость
+                            docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A6", sensorSerial[i]));//Серийный номер уровнемера
+                        }
+                    }                
+                    //Выборка данных для каждого резервуара
+                    Query query = em.createNamedQuery("TSPReport.findByDateTankID");
+                    query.setParameter("daqDate", dfDate.format(reportDate));
+                    query.setParameter("tankID", tankId[i]);
+                    List<TSPReport> list = query.getResultList(); 
+                    if (list.isEmpty()){
+                        if (tankId[i]<100){
+                            docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A7", "0.00"));//Объем при +15
+                            docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A8", "0.00"));//Объем при +15
+                            docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A", String.valueOf(i+1)));//№ п/п
+                        }else{
+                            docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "RECNO", String.valueOf(j)));
+                            docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A3", "Паливо моторне альтернативне"));
+                            docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A4", sensorSerial[i]));
+                            docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A5", "0.00"));
+                            docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A", String.valueOf(j+1)));                                                                                            
+                            j++;
+                        }
+                    }else{   
+                        for (int z=0; z<list.size(); z++){
                         //Определение плотности топлива при +20 °С
-                        Query p20 = em.createQuery("SELECT v FROM VPlotn20 v WHERE v.plotn like '"
-                            +String.valueOf(list.get(z).getTDensity()).replace(",", ".")+"%' AND v.temperName = "+String.format("%d", Math.round(list.get(z).getTTemper().doubleValue())));                                        
-                        List<VPlotn20> p20List = p20.getResultList();                        
-                        if (p20List.isEmpty()){
-                            if (tankId[i]<100){
-                                docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A"+String.valueOf(7+z), "0.00"));//Объем при +15
-                                docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A", String.valueOf(i+1)));//№ п/п
-                            }else{
-                                docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "RECNO", String.valueOf(j)));
-                                docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A3", "Паливо моторне альтернативне"));
-                                docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A4", sensorSerial[i]));
-                                docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A5", "0.00"));
-                                docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A", String.valueOf(j+1)));                                                                                                
-                                j++;
-                            }    
-                        }else{                            
-                            for (int k=0;k<p20List.size(); k++){                               
+                            Query p20 = em.createQuery("SELECT v FROM VPlotn20 v WHERE v.plotn like '"
+                                +String.valueOf(list.get(z).getTDensity()).replace(",", ".")+"%' AND v.temperName = "+String.format("%d", Math.round(list.get(z).getTTemper().doubleValue())));                                        
+                            List<VPlotn20> p20List = p20.getResultList();                        
+                            if (p20List.isEmpty()){
                                 if (tankId[i]<100){
-                                    //Вычисление массы топлива
-                                    BigDecimal mass = list.get(z).getTVolume().multiply(list.get(z).getTDensity());
-                                    Double density20 = Double.parseDouble(p20List.get(k).getPlotn20().replace(",", "."));
-                                    //Вычисление плотности топлива при +15 °С
-                                    Double density15 = density20+5.0*(0.000903-0.00132*(density20-0.7));
-                                    //Вычисление объема топлива при +15 °С
-                                    BigDecimal volume15 = mass.divide(BigDecimal.valueOf(density15), BigDecimal.ROUND_UP);                            
-                                    docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A"+String.valueOf(7+z), String.format("%.2f", volume15).replace(",", ".")));//Объем при +15
+                                    docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A"+String.valueOf(7+z), "0.00"));//Объем при +15
                                     docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A", String.valueOf(i+1)));//№ п/п
-                                }else{                            
-                                    if (z<list.size()-1){
-                                        startMass = list.get(z).getTLevel();
-                                    }else{
-                                        endMass = list.get(z).getTLevel();
+                                }else{
+                                    docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "RECNO", String.valueOf(j)));
+                                    docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A3", "Паливо моторне альтернативне"));
+                                    docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A4", sensorSerial[i]));
+                                    docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A5", "0.00"));
+                                    docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A", String.valueOf(j+1)));                                                                                                
+                                    j++;
+                                }    
+                            }else{                            
+                                for (int k=0;k<p20List.size(); k++){                               
+                                    if (tankId[i]<100){
+                                    //Вычисление массы топлива
+                                        BigDecimal mass = list.get(z).getTVolume().multiply(list.get(z).getTDensity());
                                         Double density20 = Double.parseDouble(p20List.get(k).getPlotn20().replace(",", "."));
                                         //Вычисление плотности топлива при +15 °С
                                         Double density15 = density20+5.0*(0.000903-0.00132*(density20-0.7));
-                                        //Вычисление объема топлива при +15 °С
-                                        BigDecimal volume15 = (endMass.subtract(startMass)).divide(BigDecimal.valueOf(density15), BigDecimal.ROUND_UP);
-                                        totalCounters = totalCounters.add(volume15);
-                                        docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "RECNO", String.valueOf(j)));
-                                        docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A3", "Паливо моторне альтернативне"));
-                                        docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A4", sensorSerial[i]));
-                                        docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A5", String.format("%.2f", volume15).replace(",", ".")));
-                                        docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A", String.valueOf(j+1)));                                                                                                        
-                                        j++;
+                                    //Вычисление объема топлива при +15 °С
+                                        BigDecimal volume15 = mass.divide(BigDecimal.valueOf(density15), BigDecimal.ROUND_UP);                            
+                                        docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A"+String.valueOf(7+z), String.format("%.2f", volume15).replace(",", ".")));//Объем при +15
+                                        docElement.appendChild(createDocumentRow(doc, String.valueOf(i), "1", "TAB1_A", String.valueOf(i+1)));//№ п/п
+                                    }else{                            
+                                        if (z<list.size()-1){
+                                            startMass = list.get(z).getTLevel();
+                                        }else{
+                                            endMass = list.get(z).getTLevel();
+                                            Double density20 = Double.parseDouble(p20List.get(k).getPlotn20().replace(",", "."));
+                                            //Вычисление плотности топлива при +15 °С
+                                            Double density15 = density20+5.0*(0.000903-0.00132*(density20-0.7));
+                                            //Вычисление объема топлива при +15 °С
+                                            BigDecimal volume15 = (endMass.subtract(startMass)).divide(BigDecimal.valueOf(density15), BigDecimal.ROUND_UP);
+                                            totalCounters = totalCounters.add(volume15);
+                                            docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "RECNO", String.valueOf(j)));
+                                            docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A3", "Паливо моторне альтернативне"));
+                                            docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A4", sensorSerial[i]));
+                                            docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A5", String.format("%.2f", volume15).replace(",", ".")));
+                                            docElement.appendChild(createDocumentRow(doc, String.valueOf(j), "3", "TAB3_A", String.valueOf(j+1)));                                                                                                        
+                                            j++;
+                                        }
                                     }
                                 }
                             }
-                        }
-                    }                    
-                }                                                                                        
+                        }                    
+                    }                                                                                        
+                }
             }
             docElement.appendChild(createDocumentRow(doc, "0", "4", "RECNO", "0"));
             docElement.appendChild(createDocumentRow(doc, "0", "4", "TAB4_A3", "Паливо моторне альтернативне"));

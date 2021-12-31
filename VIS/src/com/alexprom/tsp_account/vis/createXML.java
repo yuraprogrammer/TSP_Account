@@ -47,13 +47,13 @@ public class createXML {
     public createXML(EntityManager em, Date reportDate) throws TransformerConfigurationException, TransformerException{
         //Здесь нужно сделать вычитку из свойств пути сохранения XML                                
         
-        DateFormat dfSmall = new SimpleDateFormat("dd.MM.YYYY");
-        DateFormat dfLarge = new SimpleDateFormat("YYYY-MM-dd-hh-mm-ss");
-        DateFormat dfDate = new SimpleDateFormat("YYYY-MM-dd");
-        DateFormat dfPer = new SimpleDateFormat("01.MM.YYYY");
+        DateFormat dfSmall = new SimpleDateFormat("dd.MM.yyyy");
+        DateFormat dfLarge = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+        DateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dfPer = new SimpleDateFormat("01.MM.yyyy");
         BigDecimal totalCounters = BigDecimal.ZERO;
-        
-        if (checkExists(dfDate.format(reportDate), em)){
+        String rDate = dfDate.format(reportDate);
+        if (checkExists(rDate, em)){
             dbf = DocumentBuilderFactory.newInstance();
         
             try {

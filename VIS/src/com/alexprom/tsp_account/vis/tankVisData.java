@@ -31,7 +31,6 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.data.xy.XYDataset;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.windows.TopComponent;
@@ -70,16 +69,17 @@ public class tankVisData extends TopComponent implements Runnable{
    private int dataIndex=-1;
    private Thread formThread;   
    private final tankPanelChart chart;
-   private XYDataset dataset;
+   //private XYDataset dataset;
    private final ChartPanel panel;
    private BigDecimal newDensity32=BigDecimal.ZERO, newTemperature32=BigDecimal.ZERO;
-   private DataLoggerTopComponent tc;
+   private final DataLoggerTopComponent tc;
    private EntityManager em;
-   private boolean devicesChanged=false, changedOld, changedNew;
+   private boolean devicesChanged, changedOld, changedNew;
     /**
      * Creates new form tankVisData
      */
     public tankVisData() {
+        this.devicesChanged = false;
         initComponents();
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.FALSE);
         putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);

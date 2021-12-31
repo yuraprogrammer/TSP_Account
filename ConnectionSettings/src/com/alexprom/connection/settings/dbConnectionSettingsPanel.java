@@ -197,7 +197,7 @@ public final class dbConnectionSettingsPanel extends javax.swing.JPanel {
             persistenceMap.put("javax.persistence.jdbc.user", userName.getText());
             persistenceMap.put("javax.persistence.jdbc.password", String.valueOf(userPassword.getPassword()));
             persistenceMap.put("javax.persistence.jdbc.driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            managerFactory = Persistence.createEntityManagerFactory("ProcessDictionaryPU", persistenceMap);
+            managerFactory = Persistence.createEntityManagerFactory("ReportDBPU", persistenceMap);
             manager = managerFactory.createEntityManager();
             jTextArea1.append("Gotcha!!!");
         }catch(javax.persistence.PersistenceException ex){

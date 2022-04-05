@@ -143,7 +143,7 @@ public class createXML {
                 
                 //docElement.appendChild(createDocumentRow(doc, "0", "1", "TAB1_A2", "2909199020"));//Код топлива
                 //docElement.appendChild(createDocumentRow(doc, "0", "1", "TAB1_A3", "Інші ефіри прості, ефіроспирти, ефірофеноли, ефіроспиртофеноли, пероксиди спиртів, пероксиди простих ефірів, пероксиди кетонів (визначеного або невизначеного хімічного складу) та їх галогеновані, сульфовані, нітровані або нітрозовані похідні, крім ди"));
-                if ((tankId[i]!=47) && (tankId[i]!=48) && (tankId[i]!=55)){
+                //if ((tankId[i]!=47) && (tankId[i]!=48) && (tankId[i]!=55)){
                     Query tankName = em.createNamedQuery("TankDic.findByTankId");
                     tankName.setParameter("tankId", tankId[i]);
                     List<TankDic> tankList = tankName.getResultList();
@@ -225,7 +225,7 @@ public class createXML {
                             }
                         }                    
                     }                                                                                        
-                }
+                //}
             }
             docElement.appendChild(createDocumentRow(doc, "0", "4", "RECNO", "0"));
             docElement.appendChild(createDocumentRow(doc, "0", "4", "TAB4_A3", "Паливо моторне альтернативне"));
